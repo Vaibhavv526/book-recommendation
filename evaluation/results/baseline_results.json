@@ -1,0 +1,4308 @@
+{
+  "timestamp": "2026-10-04T07:04:08Z",
+  "recommender_version": "0f24073 (feat: integrate hybrid recommender into Flask API)",
+  "configuration": {
+    "author_weight": 2.5,
+    "top_n": 4,
+    "random_seed": 42,
+    "cache_dir": "engine\\cache"
+  },
+  "test_set_summary": {
+    "total_cases": 107,
+    "collaborative_cases": 30,
+    "cold_start_cases": 77,
+    "known_regression_cases": 8
+  },
+  "overall_metrics": {
+    "sample_size": 107,
+    "recommendation_count_success_rate_pct": 100.0,
+    "self_recommendation_rate_pct": 1.87,
+    "duplicate_isbn_rate_pct": 0.0,
+    "edition_redundancy_rate_pct": 0.93,
+    "author_diversity_ratio": 0.7593,
+    "avg_unique_authors_per_query": 3.04,
+    "author_rule_violations_count": 6,
+    "author_rule_violations_pct": 5.61,
+    "fallback_used_count": 0,
+    "fallback_rate_pct": 0.0
+  },
+  "collaborative_metrics": {
+    "sample_size": 30,
+    "recommendation_count_success_rate_pct": 100.0,
+    "self_recommendation_rate_pct": 0.0,
+    "duplicate_isbn_rate_pct": 0.0,
+    "edition_redundancy_rate_pct": 0.0,
+    "avg_unique_authors_per_query": 3.17,
+    "author_rule_violations_count": 3,
+    "fallback_rate_pct": 0.0
+  },
+  "cold_start_metrics": {
+    "sample_size": 77,
+    "recommendation_count_success_rate_pct": 100.0,
+    "self_recommendation_rate_pct": 2.6,
+    "duplicate_isbn_rate_pct": 0.0,
+    "edition_redundancy_rate_pct": 1.3,
+    "avg_unique_authors_per_query": 2.99,
+    "author_rule_violations_count": 3,
+    "fallback_rate_pct": 0.0
+  },
+  "strategy_distribution": {
+    "content": {
+      "count": 75,
+      "percentage": 70.09
+    },
+    "collaborative": {
+      "count": 30,
+      "percentage": 28.04
+    },
+    "content_freeform": {
+      "count": 2,
+      "percentage": 1.87
+    }
+  },
+  "latency_statistics_ms": {
+    "overall": {
+      "min": 0.0,
+      "mean": 8.399499911014164,
+      "p50": 2.9973983764648438,
+      "p90": 16.92519187927246,
+      "p95": 21.833348274230946,
+      "p99": 48.128662109374986,
+      "max": 163.62619400024414
+    },
+    "collaborative": {
+      "min": 0.0,
+      "mean": 2.460638682047526,
+      "p50": 0.6079673767089844,
+      "p90": 7.237386703491222,
+      "p95": 13.888633251190184,
+      "p99": 14.424431324005127,
+      "max": 14.583110809326172
+    },
+    "cold_start": {
+      "min": 0.0,
+      "mean": 10.713341948273895,
+      "p50": 5.206823348999023,
+      "p90": 20.33333778381348,
+      "p95": 29.49848175048831,
+      "p99": 76.08231544494569,
+      "max": 163.62619400024414
+    }
+  },
+  "coverage_metrics": {
+    "total_catalogue_isbns": 271359,
+    "indexed_unique_titles": 242135,
+    "hybrid_engine_available_isbns": 271359,
+    "hybrid_catalogue_coverage_pct": 100.0,
+    "collaborative_model_titles": 706,
+    "collaborative_matching_isbns": 2602,
+    "collaborative_catalogue_coverage_pct": 0.96
+  },
+  "regression_1984_test": {
+    "passed": true,
+    "expected_ranking": [
+      "Animal Farm",
+      "The Handmaid's Tale",
+      "Brave New World",
+      "The Vampire Lestat (Vampire Chronicles, Book II)"
+    ],
+    "actual_ranking": [
+      "Animal Farm",
+      "The Handmaid's Tale",
+      "Brave New World",
+      "The Vampire Lestat (Vampire Chronicles, Book II)"
+    ]
+  },
+  "known_regression_cases": [
+    {
+      "query_title": "1984",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "latency_ms": 6.518363952636719,
+      "recommendations": [
+        {
+          "title": "Animal Farm",
+          "author": "George Orwell",
+          "isbn": "0451526341",
+          "year": "2004",
+          "publisher": "Signet",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "The Handmaid's Tale",
+          "author": "Margaret Atwood",
+          "isbn": "0449212602",
+          "year": "1989",
+          "publisher": "Fawcett Books",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Brave New World",
+          "author": "Aldous Huxley",
+          "isbn": "0060809833",
+          "year": "1989",
+          "publisher": "Harpercollins",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "The Vampire Lestat (Vampire Chronicles, Book II)",
+          "author": "ANNE RICE",
+          "isbn": "0345313860",
+          "year": "1986",
+          "publisher": "Ballantine Books",
+          "scoring": "Component-level scoring not exposed by public API"
+        }
+      ]
+    },
+    {
+      "query_title": "The Power of Your Subconscious Mind",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "latency_ms": 5.206823348999023,
+      "recommendations": [
+        {
+          "title": "The Amazing Laws of Cosmic Mind Power",
+          "author": "Joseph Murphy",
+          "isbn": "0735202206",
+          "year": "2001",
+          "publisher": "Prentice Hall Art",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Joseph Campbell and the Power of Myth",
+          "author": "Joseph Campbell",
+          "isbn": "1565115104",
+          "year": "2001",
+          "publisher": "Highbridge Audio",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Now Is the Hour",
+          "author": "Joan Joseph",
+          "isbn": "044016561X",
+          "year": "1985",
+          "publisher": "Dell Publishing",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Teachings of the Prophet Joseph Smith",
+          "author": "Joseph F. Smith",
+          "isbn": "087579243X",
+          "year": "1977",
+          "publisher": "Deseret Book Company",
+          "scoring": "Component-level scoring not exposed by public API"
+        }
+      ]
+    },
+    {
+      "query_title": "Dracula",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "latency_ms": 2.6040077209472656,
+      "recommendations": [
+        {
+          "title": "Lady of the Shroud",
+          "author": "Bram Stoker",
+          "isbn": "0884111342",
+          "year": "1989",
+          "publisher": "Amereon Limited",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Masters of the Macabre",
+          "author": "Bram Stoker",
+          "isbn": "0965076970",
+          "year": "1999",
+          "publisher": "Book Of The Month Club",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Bram Stoker's Dracula",
+          "author": "Fred Saberhagen",
+          "isbn": "0451175751",
+          "year": "1992",
+          "publisher": "New Amer Library (Mm)",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Gossip",
+          "author": "Christopher Bram",
+          "isbn": "0452273382",
+          "year": "1998",
+          "publisher": "Plume Books",
+          "scoring": "Component-level scoring not exposed by public API"
+        }
+      ]
+    },
+    {
+      "query_title": "Think Yourself Rich",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "latency_ms": 2.0067691802978516,
+      "recommendations": [
+        {
+          "title": "Power of Your Subconscious",
+          "author": "Joseph Murphy",
+          "isbn": "0553233998",
+          "year": "1982",
+          "publisher": "Bantam Books",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "The Amazing Laws of Cosmic Mind Power",
+          "author": "Joseph Murphy",
+          "isbn": "0735202206",
+          "year": "2001",
+          "publisher": "Prentice Hall Art",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Osun Across the Waters                            : A Yoruba Goddess in",
+          "author": "Joseph M. Murphy",
+          "isbn": "0253214599",
+          "year": "2001",
+          "publisher": "Indiana University Press",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Die Macht Ihres Unterbewubtseins",
+          "author": "Dr. Joseph Murphy",
+          "isbn": "382891926X",
+          "year": "2001",
+          "publisher": "Sonderausgabe",
+          "scoring": "Component-level scoring not exposed by public API"
+        }
+      ]
+    },
+    {
+      "query_title": "Tarot therapy",
+      "is_collaborative": false,
+      "strategy": "content_freeform",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "latency_ms": 2.004861831665039,
+      "recommendations": [
+        {
+          "title": "Tarot therapy: A guide to the subconscious",
+          "author": "Jan Woudhuysen",
+          "isbn": "0874771412",
+          "year": "1980",
+          "publisher": "distributed by Houghton Mifflin",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Tarot 2000: the Pagan Tarot",
+          "author": "Robin Payne",
+          "isbn": "1899526560",
+          "year": "0",
+          "publisher": "Fowey Rare Books / Alexander &amp; Associates",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Secrets of the Tarot",
+          "author": "A. T. Mann",
+          "isbn": "0007140509",
+          "year": "2002",
+          "publisher": "Thorsons Publishers",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Hug Therapy 2 (Hug Therapy 2)",
+          "author": "Kathleen Keating",
+          "isbn": "0896381307",
+          "year": "1987",
+          "publisher": "Hazelden",
+          "scoring": "Component-level scoring not exposed by public API"
+        }
+      ]
+    },
+    {
+      "query_title": "Fractions of Zero",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "latency_ms": 2.0067691802978516,
+      "recommendations": [
+        {
+          "title": "HOME TRUTHS",
+          "author": "Bill Murphy",
+          "isbn": "1840183314",
+          "year": "2000",
+          "publisher": "Trafalgar Square",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Tin Kickers",
+          "author": "Bill Murphy",
+          "isbn": "0340765992",
+          "year": "2000",
+          "publisher": "Coronet Australia",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "I Like It When",
+          "author": "Mary Murphy",
+          "isbn": "0749745894",
+          "year": "2001",
+          "publisher": "Egmont Childrens Books",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Lifetime Treasury of Tested Tennis Tips",
+          "author": "Bill and Chet Murphy",
+          "isbn": "0135364337",
+          "year": "1981",
+          "publisher": "Prentice Hall",
+          "scoring": "Component-level scoring not exposed by public API"
+        }
+      ]
+    },
+    {
+      "query_title": "Waste Not, Want Not",
+      "is_collaborative": false,
+      "strategy": "content_freeform",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "latency_ms": 1.9683837890625,
+      "recommendations": [
+        {
+          "title": "Waste and Want: A Social History of Trash",
+          "author": "Susan Strasser",
+          "isbn": "0805048308",
+          "year": "1999",
+          "publisher": "Metropolitan Books",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Waste Not, Want Not  (Destroyer #130)",
+          "author": "Warren Murphy",
+          "isbn": "0373632452",
+          "year": "2003",
+          "publisher": "Gold Eagle",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "The Waste Land: And Other Poems",
+          "author": "T. S. Eliot",
+          "isbn": "0451526848",
+          "year": "1998",
+          "publisher": "Signet Classics",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "The Waste Land and Other Writings (Modern Library Classics)",
+          "author": "T. S. Eliot",
+          "isbn": "0375759344",
+          "year": "2002",
+          "publisher": "Modern Library",
+          "scoring": "Component-level scoring not exposed by public API"
+        }
+      ]
+    },
+    {
+      "query_title": "The Kingdom of Shivas Irons",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "latency_ms": 163.62619400024414,
+      "recommendations": [
+        {
+          "title": "Golf in the Kingdom (An Esalen Book)",
+          "author": "Michael Murphy",
+          "isbn": "0140195491",
+          "year": "1997",
+          "publisher": "Penguin Books",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "Jacob Atabet (Library of spiritual adventure)",
+          "author": "Michael Murphy",
+          "isbn": "0874774225",
+          "year": "1988",
+          "publisher": "Putnam Pub Group",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "I Like It When",
+          "author": "Mary Murphy",
+          "isbn": "0749745894",
+          "year": "2001",
+          "publisher": "Egmont Childrens Books",
+          "scoring": "Component-level scoring not exposed by public API"
+        },
+        {
+          "title": "In Search of Blandings",
+          "author": "N.T.P. Murphy",
+          "isbn": "0881622117",
+          "year": "1986",
+          "publisher": "Salem House Publishers",
+          "scoring": "Component-level scoring not exposed by public API"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "query_title": "1984",
+      "query_isbn": "0451524934",
+      "category": "known_regression",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Animal Farm",
+        "The Handmaid's Tale",
+        "Brave New World",
+        "The Vampire Lestat (Vampire Chronicles, Book II)"
+      ],
+      "recommendation_isbns": [
+        "0451526341",
+        "0449212602",
+        "0060809833",
+        "0345313860"
+      ],
+      "recommendation_authors": [
+        "George Orwell",
+        "Margaret Atwood",
+        "Aldous Huxley",
+        "ANNE RICE"
+      ],
+      "latency_ms": 6.518363952636719,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "The Power of Your Subconscious Mind",
+      "query_isbn": "0553270435",
+      "category": "known_regression",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Amazing Laws of Cosmic Mind Power",
+        "Joseph Campbell and the Power of Myth",
+        "Now Is the Hour",
+        "Teachings of the Prophet Joseph Smith"
+      ],
+      "recommendation_isbns": [
+        "0735202206",
+        "1565115104",
+        "044016561X",
+        "087579243X"
+      ],
+      "recommendation_authors": [
+        "Joseph Murphy",
+        "Joseph Campbell",
+        "Joan Joseph",
+        "Joseph F. Smith"
+      ],
+      "latency_ms": 5.206823348999023,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Dracula",
+      "query_isbn": "156619301X",
+      "category": "known_regression",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Lady of the Shroud",
+        "Masters of the Macabre",
+        "Bram Stoker's Dracula",
+        "Gossip"
+      ],
+      "recommendation_isbns": [
+        "0884111342",
+        "0965076970",
+        "0451175751",
+        "0452273382"
+      ],
+      "recommendation_authors": [
+        "Bram Stoker",
+        "Bram Stoker",
+        "Fred Saberhagen",
+        "Christopher Bram"
+      ],
+      "latency_ms": 2.6040077209472656,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Think Yourself Rich",
+      "query_isbn": "0735202230",
+      "category": "known_regression",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Power of Your Subconscious",
+        "The Amazing Laws of Cosmic Mind Power",
+        "Osun Across the Waters                            : A Yoruba Goddess in",
+        "Die Macht Ihres Unterbewubtseins"
+      ],
+      "recommendation_isbns": [
+        "0553233998",
+        "0735202206",
+        "0253214599",
+        "382891926X"
+      ],
+      "recommendation_authors": [
+        "Joseph Murphy",
+        "Joseph Murphy",
+        "Joseph M. Murphy",
+        "Dr. Joseph Murphy"
+      ],
+      "latency_ms": 2.0067691802978516,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Tarot therapy",
+      "query_isbn": "",
+      "category": "known_regression",
+      "is_collaborative": false,
+      "strategy": "content_freeform",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Tarot therapy: A guide to the subconscious",
+        "Tarot 2000: the Pagan Tarot",
+        "Secrets of the Tarot",
+        "Hug Therapy 2 (Hug Therapy 2)"
+      ],
+      "recommendation_isbns": [
+        "0874771412",
+        "1899526560",
+        "0007140509",
+        "0896381307"
+      ],
+      "recommendation_authors": [
+        "Jan Woudhuysen",
+        "Robin Payne",
+        "A. T. Mann",
+        "Kathleen Keating"
+      ],
+      "latency_ms": 2.004861831665039,
+      "is_exactly_4": true,
+      "is_self_recommendation": true,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Fractions of Zero",
+      "query_isbn": "0340767065",
+      "category": "known_regression",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "HOME TRUTHS",
+        "Tin Kickers",
+        "I Like It When",
+        "Lifetime Treasury of Tested Tennis Tips"
+      ],
+      "recommendation_isbns": [
+        "1840183314",
+        "0340765992",
+        "0749745894",
+        "0135364337"
+      ],
+      "recommendation_authors": [
+        "Bill Murphy",
+        "Bill Murphy",
+        "Mary Murphy",
+        "Bill and Chet Murphy"
+      ],
+      "latency_ms": 2.0067691802978516,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Waste Not, Want Not",
+      "query_isbn": "",
+      "category": "known_regression",
+      "is_collaborative": false,
+      "strategy": "content_freeform",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Waste and Want: A Social History of Trash",
+        "Waste Not, Want Not  (Destroyer #130)",
+        "The Waste Land: And Other Poems",
+        "The Waste Land and Other Writings (Modern Library Classics)"
+      ],
+      "recommendation_isbns": [
+        "0805048308",
+        "0373632452",
+        "0451526848",
+        "0375759344"
+      ],
+      "recommendation_authors": [
+        "Susan Strasser",
+        "Warren Murphy",
+        "T. S. Eliot",
+        "T. S. Eliot"
+      ],
+      "latency_ms": 1.9683837890625,
+      "is_exactly_4": true,
+      "is_self_recommendation": true,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "The Kingdom of Shivas Irons",
+      "query_isbn": "0767900189",
+      "category": "known_regression",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Golf in the Kingdom (An Esalen Book)",
+        "Jacob Atabet (Library of spiritual adventure)",
+        "I Like It When",
+        "In Search of Blandings"
+      ],
+      "recommendation_isbns": [
+        "0140195491",
+        "0874774225",
+        "0749745894",
+        "0881622117"
+      ],
+      "recommendation_authors": [
+        "Michael Murphy",
+        "Michael Murphy",
+        "Mary Murphy",
+        "N.T.P. Murphy"
+      ],
+      "latency_ms": 163.62619400024414,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Tribulation Force: The Continuing Drama of Those Left Behind (Left Behind No. 2)",
+      "query_isbn": "0842329218",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Left Behind: A Novel of the Earth's Last Days (Left Behind No. 1)",
+        "Nicolae: The Rise of Antichrist (Left Behind No. 3)",
+        "The Next Accident",
+        "Dust to Dust"
+      ],
+      "recommendation_isbns": [
+        "0842329129",
+        "0842329242",
+        "0553578693",
+        "0553582526"
+      ],
+      "recommendation_authors": [
+        "Tim Lahaye",
+        "Tim F. Lahaye",
+        "LISA GARDNER",
+        "TAMI HOAG"
+      ],
+      "latency_ms": 2.9973983764648438,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Coming Home",
+      "query_isbn": "0312958129",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Winter Solstice",
+        "Shell Seekers",
+        "Devices and Desires",
+        "Tara Road"
+      ],
+      "recommendation_isbns": [
+        "0312244266",
+        "0440202043",
+        "0446359750",
+        "0440235596"
+      ],
+      "recommendation_authors": [
+        "Rosamunde Pilcher",
+        "Rosamunde Pilcher",
+        "Phyllis White",
+        "Maeve Binchy"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "A Wrinkle In Time",
+      "query_isbn": "0440998050",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Midnight in the Garden of Good and Evil",
+        "The Phantom Tollbooth",
+        "Mind Prey",
+        "The Catcher in the Rye"
+      ],
+      "recommendation_isbns": [
+        "0679751521",
+        "0394820371",
+        "0425152898",
+        "0316769487"
+      ],
+      "recommendation_authors": [
+        "John Berendt",
+        "Norton Juster",
+        "John Sandford",
+        "J.D. Salinger"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Jewel",
+      "query_isbn": "0671038184",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "We Were the Mulvaneys",
+        "River, Cross My Heart",
+        "The Reader",
+        "Songs in Ordinary Time (Oprah's Book Club (Paperback))"
+      ],
+      "recommendation_isbns": [
+        "0452282829",
+        "0316899984",
+        "0679442790",
+        "0140244824"
+      ],
+      "recommendation_authors": [
+        "Joyce Carol Oates",
+        "Breena Clarke",
+        "Bernhard Schlink",
+        "Mary McGarry Morris"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "House of Sand and Fog",
+      "query_isbn": "0375727345",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Midwives: A Novel",
+        "River, Cross My Heart",
+        "Fall On Your Knees (Oprah #45)",
+        "Icy Sparks"
+      ],
+      "recommendation_isbns": [
+        "0375706771",
+        "0316899984",
+        "0743237188",
+        "0142000205"
+      ],
+      "recommendation_authors": [
+        "Chris Bohjalian",
+        "Breena Clarke",
+        "Ann-Marie MacDonald",
+        "Gwyn Hyman Rubio"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Harry Potter and the Order of the Phoenix (Book 5)",
+      "query_isbn": "043935806X",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Harry Potter and the Goblet of Fire (Book 4)",
+        "Harry Potter and the Prisoner of Azkaban (Book 3)",
+        "A Wrinkle In Time",
+        "The Bonesetter's Daughter"
+      ],
+      "recommendation_isbns": [
+        "0439139597",
+        "0439136350",
+        "0440498058",
+        "0399146431"
+      ],
+      "recommendation_authors": [
+        "J. K. Rowling",
+        "J. K. Rowling",
+        "MADELEINE L'ENGLE",
+        "Amy Tan"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Degree of Guilt",
+      "query_isbn": "034538184X",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "WLD ACCORDNG GARP",
+        "All That Remains (Kay Scarpetta Mysteries (Paperback))",
+        "Remember Me",
+        "We'll Meet Again"
+      ],
+      "recommendation_isbns": [
+        "0671822209",
+        "0380718332",
+        "0671867091",
+        "0671004565"
+      ],
+      "recommendation_authors": [
+        "John Irving",
+        "Patricia D. Cornwell",
+        "Mary Higgins Clark",
+        "Mary Higgins Clark"
+      ],
+      "latency_ms": 14.583110809326172,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Choke",
+      "query_isbn": "0385720920",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Flesh and Blood",
+        "The Murder Book",
+        "Isle of Dogs",
+        "The Blind Assassin"
+      ],
+      "recommendation_isbns": [
+        "0679459626",
+        "0345413903",
+        "0425182908",
+        "0385475721"
+      ],
+      "recommendation_authors": [
+        "Jonathan Kellerman",
+        "Jonathan Kellerman",
+        "Patricia Cornwell",
+        "Margaret Atwood"
+      ],
+      "latency_ms": 2.305269241333008,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Wifey",
+      "query_isbn": "0671693816",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Smart Women",
+        "Accident",
+        "Message from Nam",
+        "Summer Sisters"
+      ],
+      "recommendation_isbns": [
+        "0671727583",
+        "0385306024",
+        "0440209412",
+        "0385324057"
+      ],
+      "recommendation_authors": [
+        "Judy Blume",
+        "Danielle Steel",
+        "Danielle Steel",
+        "Judy Blume"
+      ],
+      "latency_ms": 2.0079612731933594,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 2,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "The Killing Game: Only One Can Win...and the Loser Dies",
+      "query_isbn": "0553581554",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Dust to Dust",
+        "Kiss the Girls",
+        "Message from Nam",
+        "The Face of Deception"
+      ],
+      "recommendation_isbns": [
+        "0553582526",
+        "0446601241",
+        "0440209412",
+        "0553578022"
+      ],
+      "recommendation_authors": [
+        "TAMI HOAG",
+        "James Patterson",
+        "Danielle Steel",
+        "Iris Johansen"
+      ],
+      "latency_ms": 2.0246505737304688,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "C Is for Corpse (Kinsey Millhone Mysteries (Paperback))",
+      "query_isbn": "0553280368",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "I Is for Innocent",
+        "E Is for Evidence: A Kinsey Millhone Mystery (Kinsey Millhone Mysteries (Paperback))",
+        "\\O\\\" Is for Outlaw\"",
+        "J Is for Judgment"
+      ],
+      "recommendation_isbns": [
+        "0449221512",
+        "0553279556",
+        "0449003787",
+        "0449221482"
+      ],
+      "recommendation_authors": [
+        "Sue Grafton",
+        "Sue Grafton",
+        "SUE GRAFTON",
+        "Sue Grafton"
+      ],
+      "latency_ms": 4.0073394775390625,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 1,
+      "violates_author_rule": true
+    },
+    {
+      "query_title": "The Robber Bride",
+      "query_isbn": "0553569058",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Stone Diaries",
+        "A Thousand Acres (Ballantine Reader's Circle)",
+        "Dude, Where's My Country?",
+        "The Blind Assassin"
+      ],
+      "recommendation_isbns": [
+        "014023313X",
+        "0449907481",
+        "0446532231",
+        "0385475721"
+      ],
+      "recommendation_authors": [
+        "Carol Shields",
+        "JANE SMILEY",
+        "Michael Moore",
+        "Margaret Atwood"
+      ],
+      "latency_ms": 2.003908157348633,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Shell Seekers",
+      "query_isbn": "0440202043",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Coming Home",
+        "Winter Solstice",
+        "Chicken Soup for the Soul (Chicken Soup for the Soul)",
+        "Echoes"
+      ],
+      "recommendation_isbns": [
+        "0312958129",
+        "0312244266",
+        "155874262X",
+        "0440122090"
+      ],
+      "recommendation_authors": [
+        "Rosamunde Pilcher",
+        "Rosamunde Pilcher",
+        "Jack Canfield",
+        "Maeve Binchy"
+      ],
+      "latency_ms": 2.0041465759277344,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Accident",
+      "query_isbn": "0385306024",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Daddy",
+        "Vanished",
+        "Wifey",
+        "Cradle and All"
+      ],
+      "recommendation_isbns": [
+        "0440207622",
+        "0385306032",
+        "0671693816",
+        "0316690619"
+      ],
+      "recommendation_authors": [
+        "DANIELLE STEEL",
+        "Danielle Steel",
+        "Judy Blume",
+        "James Patterson"
+      ],
+      "latency_ms": 1.554250717163086,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Absolute Power",
+      "query_isbn": "0446519960",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "A Man in Full",
+        "Pleading Guilty",
+        "Airframe",
+        "Sphere"
+      ],
+      "recommendation_isbns": [
+        "0374270325",
+        "0446365505",
+        "0345402871",
+        "0345353145"
+      ],
+      "recommendation_authors": [
+        "Tom Wolfe",
+        "Scott Turow",
+        "Michael Crichton",
+        "MICHAEL CRICHTON"
+      ],
+      "latency_ms": 0.5261898040771484,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Cat &amp; Mouse (Alex Cross Novels)",
+      "query_isbn": "0446606189",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Hide &amp; Seek",
+        "Exclusive",
+        "Loves Music, Loves to Dance",
+        "Nothing Lasts Forever"
+      ],
+      "recommendation_isbns": [
+        "0446603716",
+        "0446604232",
+        "0671758896",
+        "0688084915"
+      ],
+      "recommendation_authors": [
+        "James Patterson",
+        "Sandra Brown",
+        "Mary Higgins Clark",
+        "Sidney Sheldon"
+      ],
+      "latency_ms": 2.006053924560547,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "H Is for Homicide (Kinsey Millhone Mysteries (Paperback))",
+      "query_isbn": "0449219461",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "I Is for Innocent",
+        "E Is for Evidence: A Kinsey Millhone Mystery (Kinsey Millhone Mysteries (Paperback))",
+        "The Clinic (Alex Delaware Novels (Paperback))",
+        "Shadow Prey"
+      ],
+      "recommendation_isbns": [
+        "0449221512",
+        "0553279556",
+        "055357230X",
+        "039913543X"
+      ],
+      "recommendation_authors": [
+        "Sue Grafton",
+        "Sue Grafton",
+        "Jonathan Kellerman",
+        "John Sandford"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Heaven and Earth (Three Sisters Island Trilogy)",
+      "query_isbn": "0515132020",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Reef",
+        "Dance upon the Air (Three Sisters Island Trilogy)",
+        "Purity in Death",
+        "Three Fates"
+      ],
+      "recommendation_isbns": [
+        "051512608X",
+        "0515131229",
+        "042518630X",
+        "0515135062"
+      ],
+      "recommendation_authors": [
+        "Nora Roberts",
+        "Nora Roberts",
+        "J.D. Robb",
+        "Nora Roberts"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 2,
+      "violates_author_rule": true
+    },
+    {
+      "query_title": "The Dogs of Babel (Today Show Book Club #12)",
+      "query_isbn": "0316168688",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Hours: A Novel",
+        "Chosen Prey",
+        "The Jester",
+        "Like Water for Chocolate: A Novel in Monthly Installments With Recipes, Romances and Home Remedies"
+      ],
+      "recommendation_isbns": [
+        "0312305060",
+        "0425182878",
+        "0316602051",
+        "0385474016"
+      ],
+      "recommendation_authors": [
+        "Michael Cunningham",
+        "John Sandford",
+        "James Patterson",
+        "Laura Esquivel"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "The Subtle Knife (His Dark Materials, Book 2)",
+      "query_isbn": "0375823468",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Amber Spyglass (His Dark Materials, Book 3)",
+        "The Golden Compass (His Dark Materials, Book 1)",
+        "The Eyre Affair: A Novel",
+        "Song of Solomon (Oprah's Book Club (Paperback))"
+      ],
+      "recommendation_isbns": [
+        "0375823352",
+        "037582345X",
+        "0142001805",
+        "0452260116"
+      ],
+      "recommendation_authors": [
+        "PHILIP PULLMAN",
+        "PHILIP PULLMAN",
+        "Jasper Fforde",
+        "Toni Morrison"
+      ],
+      "latency_ms": 13.70859146118164,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "A Year in Provence",
+      "query_isbn": "0679731148",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Phantom Tollbooth",
+        "Coraline",
+        "A Wrinkle in Time",
+        "How to Make an American Quilt"
+      ],
+      "recommendation_isbns": [
+        "0394820371",
+        "0380977788",
+        "0440998050",
+        "0345370805"
+      ],
+      "recommendation_authors": [
+        "Norton Juster",
+        "Neil Gaiman",
+        "Madeleine L'Engle",
+        "Whitney Otto"
+      ],
+      "latency_ms": 0.6897449493408203,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "The Murder Book",
+      "query_isbn": "0345413903",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Flesh and Blood",
+        "2nd Chance",
+        "Roses Are Red (Alex Cross Novels)",
+        "Isle of Dogs"
+      ],
+      "recommendation_isbns": [
+        "0679459626",
+        "0316693200",
+        "0446605484",
+        "0425182908"
+      ],
+      "recommendation_authors": [
+        "Jonathan Kellerman",
+        "James Patterson",
+        "James Patterson",
+        "Patricia Cornwell"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Four Past Midnight",
+      "query_isbn": "0451170385",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Rose Madder",
+        "The Tommyknockers",
+        "It",
+        "The Regulators"
+      ],
+      "recommendation_isbns": [
+        "0451186362",
+        "0451156609",
+        "0450411435",
+        "0451191013"
+      ],
+      "recommendation_authors": [
+        "Stephen King",
+        "Stephen King",
+        "Stephen King",
+        "Stephen King"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 1,
+      "violates_author_rule": true
+    },
+    {
+      "query_title": "Violets Are Blue",
+      "query_isbn": "0446611212",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Four Blind Mice",
+        "Kiss the Girls",
+        "Fear Nothing",
+        "Silent Witness"
+      ],
+      "recommendation_isbns": [
+        "0316693006",
+        "0446601241",
+        "0553579754",
+        "0345404769"
+      ],
+      "recommendation_authors": [
+        "James Patterson",
+        "James Patterson",
+        "DEAN KOONTZ",
+        "RICHARD NORTH PATTERSON"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Shattered",
+      "query_isbn": "0425099334",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Whispers",
+        "Beach House",
+        "Hemlock Bay",
+        "By the Light of the Moon"
+      ],
+      "recommendation_isbns": [
+        "0440216745",
+        "1551668998",
+        "0515133302",
+        "0553582763"
+      ],
+      "recommendation_authors": [
+        "BELVA PLAIN",
+        "Mary Alice Monroe",
+        "Catherine Coulter",
+        "DEAN KOONTZ"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Hard Eight : A Stephanie Plum Novel (A Stephanie Plum Novel)",
+      "query_isbn": "0312983867",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Seven Up (A Stephanie Plum Novel)",
+        "High Five (A Stephanie Plum Novel)",
+        "The Surgeon",
+        "The Mulberry Tree"
+      ],
+      "recommendation_isbns": [
+        "0312265840",
+        "0312971346",
+        "0345447840",
+        "0743437640"
+      ],
+      "recommendation_authors": [
+        "Janet Evanovich",
+        "Janet Evanovich",
+        "TESS GERRITSEN",
+        "Jude Deveraux"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Sudden Prey",
+      "query_isbn": "0425157539",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Mind Prey",
+        "Eyes of a Child",
+        "Mortal Prey",
+        "Hornet's Nest"
+      ],
+      "recommendation_isbns": [
+        "0425152898",
+        "0679429883",
+        "0425189864",
+        "0399142282"
+      ],
+      "recommendation_authors": [
+        "John Sandford",
+        "Richard North Patterson",
+        "John Sandford",
+        "Patricia Daniels Cornwell"
+      ],
+      "latency_ms": 14.035940170288086,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "The Return of the King (The Lord of the Rings, Part 3)",
+      "query_isbn": "0345339738",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Two Towers (The Lord of the Rings, Part 2)",
+        "The Fellowship of the Ring (The Lord of the Rings, Part 1)",
+        "Scarlett : The Sequel to Margaret Mitchell's \\Gone With the Wind\\\"\"",
+        "Red Storm Rising"
+      ],
+      "recommendation_isbns": [
+        "0345339711",
+        "0345339703",
+        "0446363251",
+        "042510107X"
+      ],
+      "recommendation_authors": [
+        "J.R.R. TOLKIEN",
+        "J.R.R. TOLKIEN",
+        "Alexandra Ripley",
+        "Tom Clancy"
+      ],
+      "latency_ms": 2.846240997314453,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Journey",
+      "query_isbn": "0449218473",
+      "category": "collaborative_supported",
+      "is_collaborative": true,
+      "strategy": "collaborative",
+      "strategy_label": "Collaborative Reader Patterns",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Secrets",
+        "Kaleidoscope",
+        "Five Days in Paris",
+        "The Reef"
+      ],
+      "recommendation_isbns": [
+        "0440176484",
+        "0884092097",
+        "0440222842",
+        "051512608X"
+      ],
+      "recommendation_authors": [
+        "DANIELLE STEEL",
+        "June Stepansky",
+        "DANIELLE STEEL",
+        "Nora Roberts"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "A Confederacy of Dunces",
+      "query_isbn": "0517122707",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "La Bible de n\u00c3?\u00c2\u00a9on",
+        "The Neon Bible",
+        "John F Kennedy In His Own Words",
+        "The assassination tapes: An electronic probe into the murder of John F. Kennedy and the Dallas coverup"
+      ],
+      "recommendation_isbns": [
+        "2264023481",
+        "0802132073",
+        "0760702330",
+        "0891100008"
+      ],
+      "recommendation_authors": [
+        "John Kennedy Toole",
+        "John Kennedy Toole",
+        "John F Kennedy",
+        "G. J. A O'Toole"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Dune",
+      "query_isbn": "0425080021",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Book of Frank Herbert",
+        "The best of Frank Herbert",
+        "Once",
+        "America"
+      ],
+      "recommendation_isbns": [
+        "0425045277",
+        "0283981733",
+        "0330376136",
+        "0689857721"
+      ],
+      "recommendation_authors": [
+        "Frank Herbert",
+        "Frank Herbert",
+        "James Herbert",
+        "E. R. Frank"
+      ],
+      "latency_ms": 16.872167587280273,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Walden",
+      "query_isbn": "0393096653",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Walking",
+        "Henry David Thoreau: Three Complete Books",
+        "The BOOK OF NUMBERS",
+        "Stories by O. Henry"
+      ],
+      "recommendation_isbns": [
+        "0062511130",
+        "0517093510",
+        "0671645269",
+        "0812505026"
+      ],
+      "recommendation_authors": [
+        "Henry David Thoreau",
+        "Henry David Thoreau",
+        "David Thoreau",
+        "O Henry"
+      ],
+      "latency_ms": 0.6208419799804688,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Pearl",
+      "query_isbn": "0553278215",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "John Steinbeck Collection",
+        "Once There Was a War",
+        "In Touch",
+        "Animals Brightly Colored"
+      ],
+      "recommendation_isbns": [
+        "0792450078",
+        "0140042911",
+        "0394430387",
+        "0613072510"
+      ],
+      "recommendation_authors": [
+        "John Steinbeck",
+        "John Steinbeck",
+        "John Steinbeck IV",
+        "Steinbeck John"
+      ],
+      "latency_ms": 14.105796813964844,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "MERE CHRISTIANITY",
+      "query_isbn": "0805420460",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Case for Christianity",
+        "Letters of C.S. Lewis",
+        "Winter Tree",
+        "Angels a to Z"
+      ],
+      "recommendation_isbns": [
+        "0805420444",
+        "0006273297",
+        "0099339900",
+        "1578590515"
+      ],
+      "recommendation_authors": [
+        "C. S. Lewis",
+        "C. S Lewis",
+        "G Lewis",
+        "James R Lewis"
+      ],
+      "latency_ms": 16.605377197265625,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Ice!",
+      "query_isbn": "0553121510",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "MARIE",
+        "China Gate",
+        "The book of gambling",
+        "Heart On The Line"
+      ],
+      "recommendation_isbns": [
+        "0671819194",
+        "0394533739",
+        "0600392880",
+        "1551667029"
+      ],
+      "recommendation_authors": [
+        "Arnold",
+        "William Arnold",
+        "Peter Arnold",
+        "Judith Arnold"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Downtown",
+      "query_isbn": "0061099686",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Up Island",
+        "Islands",
+        "Kathleen",
+        "This Golden Valley"
+      ],
+      "recommendation_isbns": [
+        "0060176156",
+        "0066211115",
+        "0515074330",
+        "0515068233"
+      ],
+      "recommendation_authors": [
+        "Anne Rivers Siddons",
+        "Anne Rivers Siddons",
+        "Francine Rivers",
+        "Francine Rivers"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 2,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Fried Green Tomatoes at the Whistle-Stop Cafe",
+      "query_isbn": "039456152X",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Standing in the Rainbow",
+        "Fannie Flagg's Original Whistlestop Cafe Cookbook: Featuring : Fried Green Tomatoes, Southern Barbecue, Banana Split Cake, and Many Other Great Reci",
+        "Daisy Fay and Miracle Man",
+        "Promises Made, Promises Kept"
+      ],
+      "recommendation_isbns": [
+        "080411935X",
+        "0449908771",
+        "0099297213",
+        "158982010X"
+      ],
+      "recommendation_authors": [
+        "FANNIE FLAGG",
+        "Fannie Flagg",
+        "Flagg",
+        "Brenda Flagg"
+      ],
+      "latency_ms": 16.515016555786133,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Lucky",
+      "query_isbn": "0684857820",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Lovely Bones",
+        "In meinem Himmel.",
+        "Alice Walker",
+        "The Diary of Alice James (The Penguin American Library)"
+      ],
+      "recommendation_isbns": [
+        "0316168815",
+        "3442545528",
+        "0671919458",
+        "0140390111"
+      ],
+      "recommendation_authors": [
+        "Alice Sebold",
+        "Alice Sebold",
+        "Alice Walker",
+        "Alice James"
+      ],
+      "latency_ms": 2.0062923431396484,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "City of Light",
+      "query_isbn": "044023512X",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Amber",
+        "Violet",
+        "Captive Love",
+        "Spells For A Perfect Love Life"
+      ],
+      "recommendation_isbns": [
+        "0451203917",
+        "0451206886",
+        "0821723758",
+        "0740705512"
+      ],
+      "recommendation_authors": [
+        "Lauren Royal",
+        "Lauren Royal",
+        "Lauren Wilde",
+        "Lauren White"
+      ],
+      "latency_ms": 2.0058155059814453,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Chances",
+      "query_isbn": "0446322490",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "American Star",
+        "Rock Star",
+        "You Had to Be There",
+        "Prime Time: Joan Collins"
+      ],
+      "recommendation_isbns": [
+        "0671873113",
+        "0671674366",
+        "0771022565",
+        "0517059738"
+      ],
+      "recommendation_authors": [
+        "Jackie Collins",
+        "Jackie Collins",
+        "ROBERT COLLINS",
+        "Collins"
+      ],
+      "latency_ms": 8.01539421081543,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "NIGHT MAGIC",
+      "query_isbn": "0804105138",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Time/Steps",
+        "Meet Me in Time",
+        "Running Away",
+        "Parting Gifts"
+      ],
+      "recommendation_isbns": [
+        "0425098079",
+        "0446825301",
+        "1551661500",
+        "1551669005"
+      ],
+      "recommendation_authors": [
+        "Charlotte Vale Allen",
+        "Charlotte Vale Allen",
+        "Charlotte Allen",
+        "Charlotte Allen"
+      ],
+      "latency_ms": 7.374763488769531,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 2,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Chemistry",
+      "query_isbn": "0133502813",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "What's the Point of Christmas?",
+        "Being a Christian",
+        "Beauty",
+        "Hers For A Night"
+      ],
+      "recommendation_isbns": [
+        "0745915051",
+        "0877841012",
+        "0811813401",
+        "0373805179"
+      ],
+      "recommendation_authors": [
+        "J. John",
+        "John R. W. Scott",
+        "John Miller",
+        "John N. Walker"
+      ],
+      "latency_ms": 6.342887878417969,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Minotaur",
+      "query_isbn": "0440207428",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "UNDER SIEGE",
+        "Cuba",
+        "Cannibal Queen-22.00",
+        "Stephen King 3"
+      ],
+      "recommendation_isbns": [
+        "0671742949",
+        "031220521X",
+        "5553530245",
+        "0451921925"
+      ],
+      "recommendation_authors": [
+        "Stephen Coonts",
+        "Stephen Coonts",
+        "S. Coonts",
+        "Stephen King"
+      ],
+      "latency_ms": 4.043340682983398,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Machine Dreams",
+      "query_isbn": "0317532901",
+      "category": "cold_start_multi_edition",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Shelter",
+        "MotherKind",
+        "Black Tickets",
+        "Your God Is Too Small"
+      ],
+      "recommendation_isbns": [
+        "0385313896",
+        "0375401946",
+        "0440309247",
+        "0684846969"
+      ],
+      "recommendation_authors": [
+        "Jayne Anne Phillips",
+        "Jayne Anne Phillips",
+        "Jayne Ann Phillips",
+        "J.B. Phillips"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Saints: The Chosen Few",
+      "query_isbn": "0345383826",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Vampire: The Complete Guide to the World of the Undead",
+        "Christian Mysticism (Mystic Library)",
+        "Nostradamus Prophecies for Women",
+        "Days of Cain"
+      ],
+      "recommendation_isbns": [
+        "0670846643",
+        "0786863307",
+        "0747521611",
+        "038079280X"
+      ],
+      "recommendation_authors": [
+        "Manuela Dunn Mascetti",
+        "Manuela Dunn Mascetti",
+        "Manuela Mascetti",
+        "J. R. Dunn"
+      ],
+      "latency_ms": 14.61172103881836,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Fodor's Las Vegas (Fodor's Las Vegas)",
+      "query_isbn": "0676902154",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Fodor's New York State",
+        "Fodor Mexico 1987",
+        "Fodors Austria 1990",
+        "Fodor's Virginia &amp; Maryland (1997/4th ed)"
+      ],
+      "recommendation_isbns": [
+        "0679013040",
+        "0679013857",
+        "0679017402",
+        "0679032975"
+      ],
+      "recommendation_authors": [
+        "Fodors",
+        "Fodors",
+        "Fodor's",
+        "Fodors Travel Staff"
+      ],
+      "latency_ms": 0.9963512420654297,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "The Practice of the Wild: Essays",
+      "query_isbn": "0865474540",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Myths &amp; texts",
+        "No Nature : New and Selected Poems",
+        "Mind War",
+        "Night Crossing"
+      ],
+      "recommendation_isbns": [
+        "0811206858",
+        "0679742522",
+        "0872166120",
+        "0375409068"
+      ],
+      "recommendation_authors": [
+        "Gary Snyder",
+        "GARY SNYDER",
+        "Snyder",
+        "Don J. Snyder"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Alien Voices: The First Men in the Moon",
+      "query_isbn": "0671037927",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Invisible Man (Alien Voices)",
+        "The First Men in the Moon (Dover Thrift Editions)",
+        "Chaos",
+        "How to Survive With Your Teenager"
+      ],
+      "recommendation_isbns": [
+        "067158104X",
+        "0486414183",
+        "0812510453",
+        "0883471361"
+      ],
+      "recommendation_authors": [
+        "H.G. Wells",
+        "H. G. Wells",
+        "William Wells",
+        "Wells"
+      ],
+      "latency_ms": 17.004728317260742,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "The Development of Darwin's Theory : Natural History, Natural Theology, and Natural Selection, 1838-1859",
+      "query_isbn": "0521469406",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Darwin on Evolution: The Development of the Theory of Natural Selection",
+        "The Black Dragon",
+        "The Shishi",
+        "Charles Darwin's Letters: A Selection, 1825-1859"
+      ],
+      "recommendation_isbns": [
+        "0872202852",
+        "0586073566",
+        "0586203516",
+        "0521562120"
+      ],
+      "recommendation_authors": [
+        "Charles Darwin",
+        "Dov Silverman",
+        "Dov Silverman",
+        "Charles Darwin"
+      ],
+      "latency_ms": 7.07244873046875,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 2,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Matrix (Doctor Who Series)",
+      "query_isbn": "0563405961",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Perry's Chemical Engineers' Handbook",
+        "Time Cop: A Novel",
+        "Pursuit",
+        "Labyrinth (Aliens)"
+      ],
+      "recommendation_isbns": [
+        "0070498415",
+        "0425146529",
+        "0804115435",
+        "0553574914"
+      ],
+      "recommendation_authors": [
+        "Robert H. Perry",
+        "S.D. Perry",
+        "Thomas Perry",
+        "S. D. Perry"
+      ],
+      "latency_ms": 9.637594223022461,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "PROUD HEARTS : PROUD HEARTS",
+      "query_isbn": "0671702351",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "HIDDEN HEARTS : HIDDEN HEARTS",
+        "DRAGONS FIRE",
+        "Understanding Obstetric Ultrasound",
+        "The Power Within You"
+      ],
+      "recommendation_isbns": [
+        "0671658808",
+        "0671626957",
+        "1898507600",
+        "0914829246"
+      ],
+      "recommendation_authors": [
+        "Goodyear Roger",
+        "Goodyear Roger",
+        "Jean Proud",
+        "John-Roger"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Can We Feed Ourselves?: A Focus on Asia",
+      "query_isbn": "0914122002",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Not-So-Great Escape (McGee and Me! #03 Book)",
+        "Feed the Birds/Sturdy Mesh Feed Bag",
+        "Stories to Feed Your Soul",
+        "Feed Your Kids Bright"
+      ],
+      "recommendation_isbns": [
+        "0842341676",
+        "1563050854",
+        "0736904700",
+        "0671605224"
+      ],
+      "recommendation_authors": [
+        "Focus on the Family",
+        "Helen Witty",
+        "Annette Smith",
+        "Francine Prince"
+      ],
+      "latency_ms": 13.105630874633789,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Wettbewerbsrecht (Schriftenreihe Recht und Praxis)",
+      "query_isbn": "3789013196",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "MARGARET AND I",
+        "Justice for Some",
+        "Bunny Trouble",
+        "I'll Always Love You"
+      ],
+      "recommendation_isbns": [
+        "0671834304",
+        "0449222470",
+        "0590336010",
+        "0517572656"
+      ],
+      "recommendation_authors": [
+        "Kate Wilhelm",
+        "Kate Wilhelm",
+        "Hans Wilhelm",
+        "HANS WILHELM"
+      ],
+      "latency_ms": 1.5099048614501953,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 2,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Jocs de corrupci\u00c3\u00b3 (El balanc\u00c3\u00ad)",
+      "query_isbn": "8429740902",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Diario de Alberto",
+        "Vals (Biblioteca m\u00c3\u00adnima)",
+        "L'home que es va perdre (M\u00c3\u00adnima de butxaca)",
+        "Les normes de Castell\u00c3\u00b3 (Quaderns 3 i 4)"
+      ],
+      "recommendation_isbns": [
+        "843485094X",
+        "8477272204",
+        "8485704258",
+        "8475020577"
+      ],
+      "recommendation_authors": [
+        "Francesc Sales",
+        "Francesc Trabal",
+        "Francesc Trabal",
+        "Francesc P\u00c3\u00a9rez Moragon"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Bad, Bad Bunnies (Pee Wee Scouts (Paperback))",
+      "query_isbn": "0440402786",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "A Pee Wee Christmas (Pee Wee Scouts (Paperback))",
+        "The Pee Wee Jubilee (Pee Wee Scouts (Paperback))",
+        "Two Blocks Down",
+        "What Do Bunnies Do All Day?"
+      ],
+      "recommendation_isbns": [
+        "0440400678",
+        "0440402263",
+        "0451114779",
+        "0824985095"
+      ],
+      "recommendation_authors": [
+        "JUDY DELTON",
+        "Judy Delton",
+        "Jina Delton",
+        "Judy Mastrangelo"
+      ],
+      "latency_ms": 21.247386932373047,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Plan of Attack : A Novel (Brown, Dale)",
+      "query_isbn": "0060094117",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Dale Brown's Dreamland",
+        "Wings of Fire",
+        "Martin and John: A Novel",
+        "Gb Joys Of Motherhood Dale"
+      ],
+      "recommendation_isbns": [
+        "0425181200",
+        "042519065x",
+        "0374203113",
+        "0836230477"
+      ],
+      "recommendation_authors": [
+        "Dale Brown",
+        "Dale Brown",
+        "Dale Peck",
+        "Barbara Dale"
+      ],
+      "latency_ms": 11.540889739990234,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "God's Little Instruction Book for the Workplace (God's Little Instruction Books)",
+      "query_isbn": "1562921037",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "God's Little Instruction Book for Parents (God's Little Instruction Book Series)",
+        "God's Little Instruction Book for Kids: Little Bits of Wisdom for Little People (God's Little Instruction Books)",
+        "The Golfer's Little Instruction Book",
+        "Life's Little Instruction Book (Life's Little Instruction Books (Paperback))"
+      ],
+      "recommendation_isbns": [
+        "1562925539",
+        "1562923455",
+        "1562926063",
+        "1558531025"
+      ],
+      "recommendation_authors": [
+        "Honor Books",
+        "Honor Books",
+        "Honor Books Publishing Staff",
+        "H. Jackson Brown"
+      ],
+      "latency_ms": 37.75787353515625,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "The Sorcerer: Metamorphosis (Camulod Chronicles/Jack Whyte, 6)",
+      "query_isbn": "0312865988",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Singing Sword: The Camulod Chronicles (Whyte, Jack. Camulod Chronicles, 2.)",
+        "The Saxon Shore (Camulod Chronicles/Jack Whyte, 4)",
+        "The Warlock of Strathearn",
+        "Alfreda's World"
+      ],
+      "recommendation_isbns": [
+        "0765304589",
+        "0312865961",
+        "0575065060",
+        "0941711676"
+      ],
+      "recommendation_authors": [
+        "Jack Whyte",
+        "Jack Whyte",
+        "C. Whyte",
+        "Mary Whyte"
+      ],
+      "latency_ms": 10.544061660766602,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Should My Child Listen to Rock Music? (Helping Families Grow)",
+      "query_isbn": "1555136591",
+      "category": "cold_start_subtitles",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Helping Yourself With White Witchcraft (Reward Book)",
+        "Teach Yourself C++",
+        "Winning soccer",
+        "Sitting Pretty"
+      ],
+      "recommendation_isbns": [
+        "0133865738",
+        "1558284060",
+        "0809283085",
+        "088739017X"
+      ],
+      "recommendation_authors": [
+        "Al G. Manning",
+        "Al Stevens",
+        "Al Miller",
+        "Al Young"
+      ],
+      "latency_ms": 4.553794860839844,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "P\u00c3\u00a1nico nuclear",
+      "query_isbn": "8401491509",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Into the Storm",
+        "Tom Clancy's Net Force",
+        "The Bear and the Dragon",
+        "Red Rabbit"
+      ],
+      "recommendation_isbns": [
+        "0425196771",
+        "0375402691",
+        "039914563X",
+        "0425191184"
+      ],
+      "recommendation_authors": [
+        "Tom Clancy",
+        "Tom Clancy",
+        "Tom Clancy",
+        "Tom Clancy"
+      ],
+      "latency_ms": 22.084474563598633,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 1,
+      "violates_author_rule": true
+    },
+    {
+      "query_title": "Gifted Trust",
+      "query_isbn": "0972948503",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Environment 94/95",
+        "Student Atlas of Economic Development",
+        "The Pursuit of the Phoenix",
+        "Images of the World"
+      ],
+      "recommendation_isbns": [
+        "1561341991",
+        "0697365158",
+        "0821729624",
+        "0870443941"
+      ],
+      "recommendation_authors": [
+        "John Allen",
+        "John L Allen",
+        "John-Allen Price",
+        "Allen"
+      ],
+      "latency_ms": 8.296966552734375,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "COPS",
+      "query_isbn": "0671614460",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "WOMEN",
+        "Nam",
+        "Collector's Guide to Celebrity Autographs",
+        "Peregrine"
+      ],
+      "recommendation_isbns": [
+        "0671733613",
+        "0425071685",
+        "0873414640",
+        "0893011150"
+      ],
+      "recommendation_authors": [
+        "Mark Baker",
+        "Mark Baker",
+        "Mark Allen Baker",
+        "J. A. Baker"
+      ],
+      "latency_ms": 4.0130615234375,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Belshazzar's Daughter",
+      "query_isbn": "0747262179",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Harem",
+        "Arabesk",
+        "The Man Who Stole First Base: Tales from Baseball's Past",
+        "HOW TO SUCCEED IN BUSINESS WITHOUT LYING, CHEATING OR STEALING"
+      ],
+      "recommendation_isbns": [
+        "0755306309",
+        "0747262195",
+        "0878336338",
+        "0671795430"
+      ],
+      "recommendation_authors": [
+        "Barbara Nadel",
+        "Barbara Nadel",
+        "Eric Nadel",
+        "Jack Nadel"
+      ],
+      "latency_ms": 2.0055770874023438,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Illegal Entry",
+      "query_isbn": "0843920572",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Drought",
+        "Plains Crazy",
+        "It's So Natural",
+        "This is the Bear"
+      ],
+      "recommendation_isbns": [
+        "0890837740",
+        "1590581326",
+        "0207189897",
+        "0064431037"
+      ],
+      "recommendation_authors": [
+        "Ralph Hayes",
+        "J. M. Hayes",
+        "Alan Hayes",
+        "Sarah Hayes"
+      ],
+      "latency_ms": 2.0055770874023438,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Marimba",
+      "query_isbn": "0812515633",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Japanese Game",
+        "Vivienne",
+        "Thrust Home",
+        "Rainbow, River and Tree"
+      ],
+      "recommendation_isbns": [
+        "0812531078",
+        "0312876610",
+        "1401057888",
+        "0961481706"
+      ],
+      "recommendation_authors": [
+        "Richard Hoyt",
+        "Richard Hoyt",
+        "Richard Charles Hoyt",
+        "My Hoyt"
+      ],
+      "latency_ms": 4.885673522949219,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Chalkhill Blue",
+      "query_isbn": "0330283979",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Box of Delights: When the Wolves Were Running",
+        "Murder on the Mauretania : A Mystery Featuring George Porter Dillman and Genevieve Masefield (A Mystery Featuring George Porter Dillman &amp; Genevieve Masefield)",
+        "Murder on the Minnesota (George Porter Dillman and Genevieve Masefield Mysteries)",
+        "INTO THE BLUE : INTO THE BLUE"
+      ],
+      "recommendation_isbns": [
+        "0027627403",
+        "0312977883",
+        "0312280920",
+        "0671704834"
+      ],
+      "recommendation_authors": [
+        "John Masefield",
+        "Conrad Allen",
+        "Conrad Allen",
+        "Robert Goddard"
+      ],
+      "latency_ms": 4.0645599365234375,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Inside Vineyland",
+      "query_isbn": "189186744X",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Covenant of the Crown",
+        "Prisoners and Pawns (V, Book 6)",
+        "Yiddish : A Nation of Words",
+        "Wok Dishes (Easy Cooking)"
+      ],
+      "recommendation_isbns": [
+        "B0000523SS",
+        "0523424396",
+        "0345447301",
+        "0812055322"
+      ],
+      "recommendation_authors": [
+        "Howard Weinstein",
+        "Howard Weinstein",
+        "MIRIAM WEINSTEIN",
+        "Norman Weinstein"
+      ],
+      "latency_ms": 2.005338668823242,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Cretaceous Sea",
+      "query_isbn": "0441009891",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Pumpkin Jack",
+        "On This Hilltop",
+        "A Book of Bees : And How to Keep Them",
+        "Friends in High Places: Our Journey from Little Rock to Washington, D.C."
+      ],
+      "recommendation_isbns": [
+        "0807566667",
+        "0345373065",
+        "0395883245",
+        "0688157491"
+      ],
+      "recommendation_authors": [
+        "Will Hubbell",
+        "Sue Hubbell",
+        "Sue Hubbell",
+        "Webster Hubbell"
+      ],
+      "latency_ms": 4.010200500488281,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Roscoe's Leap",
+      "query_isbn": "0823406695",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "New World",
+        "Wolf (Point)",
+        "Passage of Time",
+        "Time and Trouble"
+      ],
+      "recommendation_isbns": [
+        "0140373772",
+        "0590456083",
+        "0684158191",
+        "0312969961"
+      ],
+      "recommendation_authors": [
+        "Gillian Cross",
+        "Gillian Cross",
+        "Gillian. Martin",
+        "Gillian Roberts"
+      ],
+      "latency_ms": 2.3679733276367188,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Lover's Lane",
+      "query_isbn": "034545331X",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Just Once",
+        "Until Tomorrow",
+        "Longing",
+        "Sisters Impossible"
+      ],
+      "recommendation_isbns": [
+        "0515120626",
+        "0515114030",
+        "0151004536",
+        "0553260138"
+      ],
+      "recommendation_authors": [
+        "Jill Marie Landis",
+        "Jill Marie Landis",
+        "J.D. Landis",
+        "James D. Landis"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "The Cryptogram",
+      "query_isbn": "0679746536",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "House of Games",
+        "The Old Religion",
+        "No, David!",
+        "TOLKIEN"
+      ],
+      "recommendation_isbns": [
+        "0802130283",
+        "1585671908",
+        "0590930028",
+        "0684839792"
+      ],
+      "recommendation_authors": [
+        "David Mamet",
+        "David Mamet",
+        "David Shannon",
+        "David Day"
+      ],
+      "latency_ms": 8.021831512451172,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Ra Expeditions",
+      "query_isbn": "0451051211",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Maldive Mystery",
+        "Kon-Tiki",
+        "Path of the Assassin",
+        "State of the Union : A Thriller"
+      ],
+      "recommendation_isbns": [
+        "0345347277",
+        "0671499505",
+        "0743436768",
+        "0743436776"
+      ],
+      "recommendation_authors": [
+        "Thor Heyerdahl",
+        "Thor Heyerdahl",
+        "Brad Thor",
+        "Brad Thor"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 2,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Faithful : A Novel",
+      "query_isbn": "0385510500",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Faithful Are the Wounds: A Novel",
+        "Stories for a Faithful Heart",
+        "Faithful Attraction",
+        "Always Faithful (An Angel's Touch)"
+      ],
+      "recommendation_isbns": [
+        "0393317153",
+        "1576734919",
+        "0812511786",
+        "0505523744"
+      ],
+      "recommendation_authors": [
+        "May Sarton",
+        "Alice Gray",
+        "Andrew M. Greeley",
+        "Julie Miller"
+      ],
+      "latency_ms": 2.0875930786132812,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Reclaiming Jake",
+      "query_isbn": "0373826001",
+      "category": "cold_start_short_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Where The Heart Is (9 Months) (Harlequin Superromance, No 631)",
+        "Keeping Katie (Harlequin Superromance, No 590)",
+        "I Wish I Could Be More",
+        "The Other Woman"
+      ],
+      "recommendation_isbns": [
+        "0373706316",
+        "0373705905",
+        "1556615469",
+        "0425180654"
+      ],
+      "recommendation_authors": [
+        "Patricia Keelyn",
+        "Patricia Keelyn",
+        "Patricia Smith",
+        "Patricia Kay"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Myths of the Greeks and Romans (Meridian S.)",
+      "query_isbn": "0452011620",
+      "category": "cold_start_long_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The RISE OF THE GREEKS",
+        "Cleopatra",
+        "Skateaway",
+        "Dance Real Slow"
+      ],
+      "recommendation_isbns": [
+        "0684185369",
+        "1566198410",
+        "0374265712",
+        "0374134669"
+      ],
+      "recommendation_authors": [
+        "Michael Grant",
+        "Michael Grant",
+        "Michael Grant Jaffe",
+        "Michael Grant Jaffe"
+      ],
+      "latency_ms": 19.375085830688477,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 2,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Gone Too Soon: The Life and Loss of Infants and Unborn Children",
+      "query_isbn": "1555036554",
+      "category": "cold_start_long_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Once Wicked",
+        "The Scoundrel's Vow",
+        "The Blessing of a Broken Heart",
+        "High Cotton: Love and Death on Wall Street"
+      ],
+      "recommendation_isbns": [
+        "0440235286",
+        "0440235278",
+        "159264029X",
+        "0312911033"
+      ],
+      "recommendation_authors": [
+        "Sherri Browning",
+        "Sherri Browning",
+        "Sherri Mandell",
+        "Sherri Daley"
+      ],
+      "latency_ms": 8.02469253540039,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Waste and Want: A Social History of Trash",
+      "query_isbn": "0805048308",
+      "category": "cold_start_long_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Never Done: A History of American Housework",
+        "Wildlife",
+        "How I Changed My Life",
+        "Swoosh : Unauthorized Story of Nike and the Men Who Played There, The"
+      ],
+      "recommendation_isbns": [
+        "0805067744",
+        "0440201519",
+        "0671884158",
+        "0887306225"
+      ],
+      "recommendation_authors": [
+        "Susan Strasser",
+        "Todd Strasser",
+        "Todd Strasser",
+        "J. B. Strasser"
+      ],
+      "latency_ms": 15.356302261352539,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "It's Hard to Be Hip Over Thirty...and Other Tragedies of Married Life",
+      "query_isbn": "1903155010",
+      "category": "cold_start_long_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "FOREVER FIFTY",
+        "WHEN DID I STOP BEING 20",
+        "FIRE IN STREETS",
+        "In the Shadow of the Prophet: The Struggle for the Soul of Islam"
+      ],
+      "recommendation_isbns": [
+        "0684832372",
+        "0671643282",
+        "0671243233",
+        "0813339022"
+      ],
+      "recommendation_authors": [
+        "Judith Viorst",
+        "Judith Viorst",
+        "Milton Viorst",
+        "Milton Viorst"
+      ],
+      "latency_ms": 3.2427310943603516,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 2,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "You Look Funny! (First-Start Easy Reader)",
+      "query_isbn": "0816709777",
+      "category": "cold_start_long_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Look Closer: Tree Life",
+        "True Country",
+        "To My Sister",
+        "The Last Hour"
+      ],
+      "recommendation_isbns": [
+        "1564581322",
+        "1863683232",
+        "0766709531",
+        "0965674916"
+      ],
+      "recommendation_authors": [
+        "Kim Taylor",
+        "Kim Scott",
+        "Kim Anderson",
+        "Kim Young"
+      ],
+      "latency_ms": 16.373157501220703,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "White Spells: Magic for Love, Money  &amp; Happiness",
+      "query_isbn": "0738700819",
+      "category": "cold_start_long_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Happiness Digest",
+        "Spells For A Perfect Love Life",
+        "Spells For Self-Improvement",
+        "Letters of E. B. White"
+      ],
+      "recommendation_isbns": [
+        "0828009147",
+        "0740705512",
+        "0740705520",
+        "006014601X"
+      ],
+      "recommendation_authors": [
+        "E. G. White",
+        "Lauren White",
+        "Lauren White",
+        "E. B White"
+      ],
+      "latency_ms": 15.905141830444336,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Travelers' Tales Love &amp; Romance: True Stories of Passion on the Road (Travelers' Tales Guides)",
+      "query_isbn": "188521118X",
+      "category": "cold_start_long_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Bow's Boy : A Novel",
+        "Travelers' Tales: The Road Within: True Stories of Life on the Road (Travelers' Tales Guides)",
+        "Rika's Stories from the Other Side",
+        "Travelers' Tales Guides India (Travelers' Tales Guides)"
+      ],
+      "recommendation_isbns": [
+        "0743227271",
+        "1885211198",
+        "0595094767",
+        "1885211015"
+      ],
+      "recommendation_authors": [
+        "Richard Babcock",
+        "Sean O'Reilly",
+        "Erika M. L. Babcock",
+        "James P. O'Reilly"
+      ],
+      "latency_ms": 20.67279815673828,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Bizarre Fantasy Rugby XV's (Bizarre Fantasy Teams)",
+      "query_isbn": "1903009294",
+      "category": "cold_start_long_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "This is Cannabis",
+        "The First Ships Around the World (Cambridge Topic Book)",
+        "Microwaving Main Meals the New Zealand Way",
+        "Gray Ghosts of the Confederacy: Guerrilla Warfare in the West, 1861-1865"
+      ],
+      "recommendation_isbns": [
+        "1860743994",
+        "0822512041",
+        "0908610831",
+        "0807111627"
+      ],
+      "recommendation_authors": [
+        "Nick Brownlee",
+        "W. D. Brownlee",
+        "Brownlee",
+        "Richard S. Brownlee"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "The Talking Cure: A Memoir of Life on Air",
+      "query_isbn": "1583220410",
+      "category": "cold_start_long_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "New York Son",
+        "My Cat Beany",
+        "Human Antiquity",
+        "Frauds, Myths, and Mysteries: Science and Pseudoscience in Archaeology"
+      ],
+      "recommendation_isbns": [
+        "0385299052",
+        "0394825942",
+        "1559346841",
+        "1559345233"
+      ],
+      "recommendation_authors": [
+        "Mike Feder",
+        "Jane Feder",
+        "Kenneth L. Feder",
+        "Kenneth L. Feder"
+      ],
+      "latency_ms": 15.762567520141602,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Thimbleberries Classic Country: Four Seasons of Lifestyle, Decorating, Entertaining &amp; Quilting",
+      "query_isbn": "1890621102",
+      "category": "cold_start_long_title",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "A Thimbleberries (r) Housewarming: 22 Projects for Quilters",
+        "Cozy Cabin Quilts from Thimbleberries: 20 Projects for Any Home",
+        "Emerald Desire",
+        "Emerald Ecstasy"
+      ],
+      "recommendation_isbns": [
+        "1571201009",
+        "1571201769",
+        "0843921846",
+        "0843924543"
+      ],
+      "recommendation_authors": [
+        "Lynette Jensen",
+        "Lynette Jensen",
+        "Lynette Vinet",
+        "Lynette Vinet"
+      ],
+      "latency_ms": 9.137868881225586,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 2,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Eight Days of Luke",
+      "query_isbn": "0064473570",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Wild Robert",
+        "The Time of the Ghost",
+        "Odd's End",
+        "The Maestro"
+      ],
+      "recommendation_isbns": [
+        "0749705906",
+        "0064473546",
+        "0771090110",
+        "0888992637"
+      ],
+      "recommendation_authors": [
+        "Diana Wynne Jones",
+        "Diana Wynne Jones",
+        "Wynne-Jones",
+        "Tim Wynne-Jones"
+      ],
+      "latency_ms": 10.696172714233398,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "The Cave Dreamers",
+      "query_isbn": "0380835010",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Heaven Sword",
+        "No Roof but Heaven",
+        "After the Storm",
+        "Jeanne Rose's Modern Herbal"
+      ],
+      "recommendation_isbns": [
+        "0380898519",
+        "0312926391",
+        "0449230813",
+        "0399513949"
+      ],
+      "recommendation_authors": [
+        "Jeanne Williams",
+        "Jeanne Williams",
+        "Williams",
+        "Jeanne Rose"
+      ],
+      "latency_ms": 5.959987640380859,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "H.P. Lovecraft's Book of Horror",
+      "query_isbn": "1854872311",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Best New Horror 3",
+        "Horror: 100 Best Books",
+        "All the Beautiful Sinners",
+        "Amityville Horror 2"
+      ],
+      "recommendation_isbns": [
+        "0881848581",
+        "0881845949",
+        "1590710088",
+        "0446300292"
+      ],
+      "recommendation_authors": [
+        "Stephen Jones",
+        "Stephen Jones",
+        "Stephen Graham Jones",
+        "John G Jones"
+      ],
+      "latency_ms": 16.764402389526367,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Drowned Ammet",
+      "query_isbn": "0333226208",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Wild Robert",
+        "The Time of the Ghost",
+        "Odd's End",
+        "The Maestro"
+      ],
+      "recommendation_isbns": [
+        "0749705906",
+        "0064473546",
+        "0771090110",
+        "0888992637"
+      ],
+      "recommendation_authors": [
+        "Diana Wynne Jones",
+        "Diana Wynne Jones",
+        "Wynne-Jones",
+        "Tim Wynne-Jones"
+      ],
+      "latency_ms": 8.504629135131836,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Secret Splendor (Silhouette Classics, No 11)",
+      "query_isbn": "0373482477",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Above And Beyond (Brown, Sandra)",
+        "Devil'S Own",
+        "In a Class by Itself",
+        "White Hot (Brown, Sandra)"
+      ],
+      "recommendation_isbns": [
+        "077832026X",
+        "1551667932",
+        "055357602X",
+        "0743245539"
+      ],
+      "recommendation_authors": [
+        "Sandra Brown",
+        "Sandra Brown",
+        "Sandra Brown",
+        "Sandra Brown"
+      ],
+      "latency_ms": 27.43363380432129,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 1,
+      "violates_author_rule": true
+    },
+    {
+      "query_title": "Never Can Say Good-Bye: A Novel",
+      "query_isbn": "1570089914",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Kramer project",
+        "Born Under a Bad Sign",
+        "Fate",
+        "The Miracle of Forgetness"
+      ],
+      "recommendation_isbns": [
+        "0385114516",
+        "1872568351",
+        "1931696942",
+        "1562362356"
+      ],
+      "recommendation_authors": [
+        "Robert A Smith",
+        "Robert Smith",
+        "Robert Arthur Smith",
+        "Robert F. Smith"
+      ],
+      "latency_ms": 20.107030868530273,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "How to Write and Decode Secret Messages (Codemaster)",
+      "query_isbn": "0590373862",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "You Be the Jury",
+        "Courtroom III",
+        "Mixed Messages",
+        "The Book of the Dead Man"
+      ],
+      "recommendation_isbns": [
+        "0590401939",
+        "0590430483",
+        "1551661640",
+        "1556590636"
+      ],
+      "recommendation_authors": [
+        "Marvin Miller",
+        "Marvin Miller",
+        "Jim Miller",
+        "Marvin Bell"
+      ],
+      "latency_ms": 6.01506233215332,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "This Fish Is Loaded! The Book of Surreal and Bizarre Humour",
+      "query_isbn": "0806512628",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Love Is Strange",
+        "The Penguin Book of Erotic Stories by Women",
+        "Colloquial Danish Pack (Colloquial Series)",
+        "Bronte"
+      ],
+      "recommendation_isbns": [
+        "0575401540",
+        "0140245316",
+        "0415301815",
+        "031214816X"
+      ],
+      "recommendation_authors": [
+        "Richard Glyn Jones",
+        "Richard Glyn Jones",
+        "W. Glyn Jones",
+        "Glyn Hughes"
+      ],
+      "latency_ms": 14.306306838989258,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Who Cut the Cheese? : A Cutting Edge Way of Surviving Change by Shifting the Blame",
+      "query_isbn": "0743212355",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Breathe: A Guy's Guide to Pregnancy",
+        "Animal Sounds",
+        "Eagle Down",
+        "The Four Feathers"
+      ],
+      "recommendation_isbns": [
+        "0743219708",
+        "0688310362",
+        "0821716441",
+        "0743448219"
+      ],
+      "recommendation_authors": [
+        "Mason Brown",
+        "G. F. Mason",
+        "William Mason",
+        "A.E.W. Mason"
+      ],
+      "latency_ms": 5.013227462768555,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "The Frugal Gourmet Cooks American",
+      "query_isbn": "0688063470",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Frugal Gourmet Cooks with Wine",
+        "The Frugal Gourmet Celebrates Christmas",
+        "Fg Cooks American",
+        "Stanley"
+      ],
+      "recommendation_isbns": [
+        "0380706717",
+        "0688091288",
+        "0380706725",
+        "0749714832"
+      ],
+      "recommendation_authors": [
+        "Jeff Smith",
+        "Jeff Smith",
+        "J Smith",
+        "Jeff Brown"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Garfield Swallows His Pride (Garfield (Numbered Paperback))",
+      "query_isbn": "0345347250",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Garfield at Large (Garfield (Numbered Paperback))",
+        "Garfield Dishes It Out (Garfield (Numbered Paperback))",
+        "Garfield by the Pound (Garfield (Numbered Paperback))",
+        "Garfield Rolls on (Garfield (Numbered Paperback))"
+      ],
+      "recommendation_isbns": [
+        "0345320131",
+        "0345392876",
+        "0345375793",
+        "0345326342"
+      ],
+      "recommendation_authors": [
+        "Jim Davis",
+        "Jim Davis",
+        "Jim Davis",
+        "Jim Davis"
+      ],
+      "latency_ms": 48.436880111694336,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": true,
+      "all_in_catalogue": true,
+      "unique_authors_count": 1,
+      "violates_author_rule": true
+    },
+    {
+      "query_title": "Where Does a Mother Go to Resign?",
+      "query_isbn": "0871236060",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Lionors",
+        "Boomerang Joy",
+        "Christian Acts of Kindness",
+        "Johnson V. Johnson"
+      ],
+      "recommendation_isbns": [
+        "0380004089",
+        "031023199X",
+        "1573241733",
+        "0440200415"
+      ],
+      "recommendation_authors": [
+        "Barbara F. Johnson",
+        "Barbara Johnson",
+        "Barbara Johnson",
+        "Barbara Goldsmith"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 3,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Letters to the Thirsty",
+      "query_isbn": "1578560470",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "The Novel and the Police",
+        "Beauty",
+        "Miller's Court",
+        "Crossing Over"
+      ],
+      "recommendation_isbns": [
+        "0520067460",
+        "0811813401",
+        "0395313236",
+        "1588720020"
+      ],
+      "recommendation_authors": [
+        "D.A. Miller",
+        "John Miller",
+        "Arthur Miller",
+        "John Edward"
+      ],
+      "latency_ms": 0.0,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 4,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Arthur's Family Vacation - With Stickers (Arthur Adventure Series)",
+      "query_isbn": "0316109584",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Arthur's Baby (Arthur Adventure Series)",
+        "Arthur's Thanksgiving (Arthur Adventure Series)",
+        "Arthur Accused (Marc Brown Arthur Chapter Books (Paperback))",
+        "Arthur and the Lost Diary"
+      ],
+      "recommendation_isbns": [
+        "0316111236",
+        "0316112321",
+        "0316121509",
+        "0316610046"
+      ],
+      "recommendation_authors": [
+        "Marc Brown",
+        "Marc Brown",
+        "Marc Tolon Brown",
+        "Marc Tolon Brown"
+      ],
+      "latency_ms": 43.29991340637207,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 2,
+      "violates_author_rule": false
+    },
+    {
+      "query_title": "Getting into Medical School: The Premedical Student's Guidebook (Barron's Getting Into Medical School)",
+      "query_isbn": "0812042662",
+      "category": "cold_start_common_author",
+      "is_collaborative": false,
+      "strategy": "content",
+      "strategy_label": "Thematic & Author Affinity",
+      "fallback_used": false,
+      "recommendation_count": 4,
+      "recommendation_titles": [
+        "Dreams and Healing",
+        "MIND PREY",
+        "Healing and Wholeness",
+        "Ministry Burnout"
+      ],
+      "recommendation_isbns": [
+        "0809121298",
+        "0743532473",
+        "0809120445",
+        "0809124653"
+      ],
+      "recommendation_authors": [
+        "John A. Sanford",
+        "John Sanford",
+        "John A. Sanford",
+        "John Sanford"
+      ],
+      "latency_ms": 5.177021026611328,
+      "is_exactly_4": true,
+      "is_self_recommendation": false,
+      "has_duplicate_isbn": false,
+      "has_edition_redundancy": false,
+      "all_in_catalogue": true,
+      "unique_authors_count": 2,
+      "violates_author_rule": false
+    }
+  ]
+}

@@ -1,0 +1,751 @@
+[
+  {
+    "title": "1984",
+    "category": "known_regression",
+    "is_collaborative": true,
+    "isbn": "0451524934",
+    "author": "George Orwell"
+  },
+  {
+    "title": "The Power of Your Subconscious Mind",
+    "category": "known_regression",
+    "is_collaborative": false,
+    "isbn": "0553270435",
+    "author": "Joseph Murrhy"
+  },
+  {
+    "title": "Dracula",
+    "category": "known_regression",
+    "is_collaborative": false,
+    "isbn": "156619301X",
+    "author": "Bram Stoker"
+  },
+  {
+    "title": "Think Yourself Rich",
+    "category": "known_regression",
+    "is_collaborative": false,
+    "isbn": "0735202230",
+    "author": "Joseph Murphy"
+  },
+  {
+    "title": "Tarot therapy",
+    "category": "known_regression",
+    "is_collaborative": false,
+    "isbn": "",
+    "author": ""
+  },
+  {
+    "title": "Fractions of Zero",
+    "category": "known_regression",
+    "is_collaborative": false,
+    "isbn": "0340767065",
+    "author": "Bill Murphy"
+  },
+  {
+    "title": "Waste Not, Want Not",
+    "category": "known_regression",
+    "is_collaborative": false,
+    "isbn": "",
+    "author": ""
+  },
+  {
+    "title": "The Kingdom of Shivas Irons",
+    "category": "known_regression",
+    "is_collaborative": false,
+    "isbn": "0767900189",
+    "author": "Michael Murphy"
+  },
+  {
+    "title": "Tribulation Force: The Continuing Drama of Those Left Behind (Left Behind No. 2)",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0842329218",
+    "author": "Tim LaHaye"
+  },
+  {
+    "title": "Coming Home",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0312958129",
+    "author": "Rosamunde Pilcher"
+  },
+  {
+    "title": "A Wrinkle In Time",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0440998050",
+    "author": "Madeleine L'Engle"
+  },
+  {
+    "title": "Jewel",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0671038184",
+    "author": "Bret Lott"
+  },
+  {
+    "title": "House of Sand and Fog",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0375727345",
+    "author": "Andre Dubus III"
+  },
+  {
+    "title": "Harry Potter and the Order of the Phoenix (Book 5)",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "043935806X",
+    "author": "J. K. Rowling"
+  },
+  {
+    "title": "Degree of Guilt",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "034538184X",
+    "author": "Richard North Patterson"
+  },
+  {
+    "title": "Choke",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0385720920",
+    "author": "CHUCK PALAHNIUK"
+  },
+  {
+    "title": "Wifey",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0671693816",
+    "author": "Judy Blume"
+  },
+  {
+    "title": "The Killing Game: Only One Can Win...and the Loser Dies",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0553581554",
+    "author": "Iris Johansen"
+  },
+  {
+    "title": "C Is for Corpse (Kinsey Millhone Mysteries (Paperback))",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0553280368",
+    "author": "Sue Grafton"
+  },
+  {
+    "title": "The Robber Bride",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0553569058",
+    "author": "Margaret Atwood"
+  },
+  {
+    "title": "Shell Seekers",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0440202043",
+    "author": "Rosamunde Pilcher"
+  },
+  {
+    "title": "Accident",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0385306024",
+    "author": "Danielle Steel"
+  },
+  {
+    "title": "Absolute Power",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0446519960",
+    "author": "David Baldacci"
+  },
+  {
+    "title": "Cat &amp; Mouse (Alex Cross Novels)",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0446606189",
+    "author": "James Patterson"
+  },
+  {
+    "title": "H Is for Homicide (Kinsey Millhone Mysteries (Paperback))",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0449219461",
+    "author": "Sue Grafton"
+  },
+  {
+    "title": "Heaven and Earth (Three Sisters Island Trilogy)",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0515132020",
+    "author": "Nora Roberts"
+  },
+  {
+    "title": "The Dogs of Babel (Today Show Book Club #12)",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0316168688",
+    "author": "Carolyn Parkhurst"
+  },
+  {
+    "title": "The Subtle Knife (His Dark Materials, Book 2)",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0375823468",
+    "author": "PHILIP PULLMAN"
+  },
+  {
+    "title": "A Year in Provence",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0679731148",
+    "author": "Peter Mayle"
+  },
+  {
+    "title": "The Murder Book",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0345413903",
+    "author": "Jonathan Kellerman"
+  },
+  {
+    "title": "Four Past Midnight",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0451170385",
+    "author": "Stephen King"
+  },
+  {
+    "title": "Violets Are Blue",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0446611212",
+    "author": "James Patterson"
+  },
+  {
+    "title": "Shattered",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0425099334",
+    "author": "Dean R. Koontz"
+  },
+  {
+    "title": "Hard Eight : A Stephanie Plum Novel (A Stephanie Plum Novel)",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0312983867",
+    "author": "Janet Evanovich"
+  },
+  {
+    "title": "Sudden Prey",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0425157539",
+    "author": "John Sandford"
+  },
+  {
+    "title": "The Return of the King (The Lord of the Rings, Part 3)",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0345339738",
+    "author": "J.R.R. TOLKIEN"
+  },
+  {
+    "title": "Journey",
+    "category": "collaborative_supported",
+    "is_collaborative": true,
+    "isbn": "0449218473",
+    "author": "James A. Michener"
+  },
+  {
+    "title": "A Confederacy of Dunces",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "0517122707",
+    "author": "John Kennedy Toole"
+  },
+  {
+    "title": "Dune",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "0425080021",
+    "author": "Frank Herbert"
+  },
+  {
+    "title": "Walden",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "0393096653",
+    "author": "Henry David Thoreau"
+  },
+  {
+    "title": "Pearl",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "0553278215",
+    "author": "John Steinbeck"
+  },
+  {
+    "title": "MERE CHRISTIANITY",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "0805420460",
+    "author": "C. S. Lewis"
+  },
+  {
+    "title": "Ice!",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "0553121510",
+    "author": "Arnold Federbush"
+  },
+  {
+    "title": "Downtown",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "0061099686",
+    "author": "Anne Rivers Siddons"
+  },
+  {
+    "title": "Fried Green Tomatoes at the Whistle-Stop Cafe",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "039456152X",
+    "author": "Fannie Flagg"
+  },
+  {
+    "title": "Lucky",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "0684857820",
+    "author": "Alice Sebold"
+  },
+  {
+    "title": "City of Light",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "044023512X",
+    "author": "Lauren Belfer"
+  },
+  {
+    "title": "Chances",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "0446322490",
+    "author": "Jackie Collins"
+  },
+  {
+    "title": "NIGHT MAGIC",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "0804105138",
+    "author": "Charlotte Vale Allen"
+  },
+  {
+    "title": "Chemistry",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "0133502813",
+    "author": "John McMurry"
+  },
+  {
+    "title": "Minotaur",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "0440207428",
+    "author": "Stephen Coonts"
+  },
+  {
+    "title": "Machine Dreams",
+    "category": "cold_start_multi_edition",
+    "is_collaborative": false,
+    "isbn": "0317532901",
+    "author": "Jayne Anne Phillips"
+  },
+  {
+    "title": "Saints: The Chosen Few",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "0345383826",
+    "author": "Manuela Dunn-Mascetti"
+  },
+  {
+    "title": "Fodor's Las Vegas (Fodor's Las Vegas)",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "0676902154",
+    "author": "Fodors"
+  },
+  {
+    "title": "The Practice of the Wild: Essays",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "0865474540",
+    "author": "Gary Snyder"
+  },
+  {
+    "title": "Alien Voices: The First Men in the Moon",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "0671037927",
+    "author": "H.G. Wells"
+  },
+  {
+    "title": "The Development of Darwin's Theory : Natural History, Natural Theology, and Natural Selection, 1838-1859",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "0521469406",
+    "author": "Dov Ospovat"
+  },
+  {
+    "title": "Matrix (Doctor Who Series)",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "0563405961",
+    "author": "Robert Perry"
+  },
+  {
+    "title": "PROUD HEARTS : PROUD HEARTS",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "0671702351",
+    "author": "Goodyear Roger"
+  },
+  {
+    "title": "Can We Feed Ourselves?: A Focus on Asia",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "0914122002",
+    "author": "Hiroji Kubota"
+  },
+  {
+    "title": "Wettbewerbsrecht (Schriftenreihe Recht und Praxis)",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "3789013196",
+    "author": "Wilhelm Nordemann"
+  },
+  {
+    "title": "Jocs de corrupci\u00c3\u00b3 (El balanc\u00c3\u00ad)",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "8429740902",
+    "author": "Francesc Puigpelat"
+  },
+  {
+    "title": "Bad, Bad Bunnies (Pee Wee Scouts (Paperback))",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "0440402786",
+    "author": "Judy Delton"
+  },
+  {
+    "title": "Plan of Attack : A Novel (Brown, Dale)",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "0060094117",
+    "author": "Dale Brown"
+  },
+  {
+    "title": "God's Little Instruction Book for the Workplace (God's Little Instruction Books)",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "1562921037",
+    "author": "Honor Books"
+  },
+  {
+    "title": "The Sorcerer: Metamorphosis (Camulod Chronicles/Jack Whyte, 6)",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "0312865988",
+    "author": "Jack Whyte"
+  },
+  {
+    "title": "Should My Child Listen to Rock Music? (Helping Families Grow)",
+    "category": "cold_start_subtitles",
+    "is_collaborative": false,
+    "isbn": "1555136591",
+    "author": "Al Menconi"
+  },
+  {
+    "title": "P\u00c3\u00a1nico nuclear",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "8401491509",
+    "author": "Tom Clancy"
+  },
+  {
+    "title": "Gifted Trust",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "0972948503",
+    "author": "John Paul Allen"
+  },
+  {
+    "title": "COPS",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "0671614460",
+    "author": "Mark Baker"
+  },
+  {
+    "title": "Belshazzar's Daughter",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "0747262179",
+    "author": "Barbara Nadel"
+  },
+  {
+    "title": "Illegal Entry",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "0843920572",
+    "author": "Ralph Hayes"
+  },
+  {
+    "title": "Marimba",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "0812515633",
+    "author": "Richard Hoyt"
+  },
+  {
+    "title": "Chalkhill Blue",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "0330283979",
+    "author": "R Masefield"
+  },
+  {
+    "title": "Inside Vineyland",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "189186744X",
+    "author": "Lauren Weinstein"
+  },
+  {
+    "title": "Cretaceous Sea",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "0441009891",
+    "author": "Will Hubbell"
+  },
+  {
+    "title": "Roscoe's Leap",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "0823406695",
+    "author": "Gillian Cross"
+  },
+  {
+    "title": "Lover's Lane",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "034545331X",
+    "author": "JILL MARIE LANDIS"
+  },
+  {
+    "title": "The Cryptogram",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "0679746536",
+    "author": "David Mamet"
+  },
+  {
+    "title": "Ra Expeditions",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "0451051211",
+    "author": "Thor Heyerdahl"
+  },
+  {
+    "title": "Faithful : A Novel",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "0385510500",
+    "author": "DAVITT SIGERSON"
+  },
+  {
+    "title": "Reclaiming Jake",
+    "category": "cold_start_short_title",
+    "is_collaborative": false,
+    "isbn": "0373826001",
+    "author": "Patricia Keelyn"
+  },
+  {
+    "title": "Myths of the Greeks and Romans (Meridian S.)",
+    "category": "cold_start_long_title",
+    "is_collaborative": false,
+    "isbn": "0452011620",
+    "author": "Michael Grant"
+  },
+  {
+    "title": "Gone Too Soon: The Life and Loss of Infants and Unborn Children",
+    "category": "cold_start_long_title",
+    "is_collaborative": false,
+    "isbn": "1555036554",
+    "author": "Sherri Devashrayee Wittwer"
+  },
+  {
+    "title": "Waste and Want: A Social History of Trash",
+    "category": "cold_start_long_title",
+    "is_collaborative": false,
+    "isbn": "0805048308",
+    "author": "Susan Strasser"
+  },
+  {
+    "title": "It's Hard to Be Hip Over Thirty...and Other Tragedies of Married Life",
+    "category": "cold_start_long_title",
+    "is_collaborative": false,
+    "isbn": "1903155010",
+    "author": "Judith Viorst"
+  },
+  {
+    "title": "You Look Funny! (First-Start Easy Reader)",
+    "category": "cold_start_long_title",
+    "is_collaborative": false,
+    "isbn": "0816709777",
+    "author": "Joy Kim"
+  },
+  {
+    "title": "White Spells: Magic for Love, Money  &amp; Happiness",
+    "category": "cold_start_long_title",
+    "is_collaborative": false,
+    "isbn": "0738700819",
+    "author": "Ileana Abrev"
+  },
+  {
+    "title": "Travelers' Tales Love &amp; Romance: True Stories of Passion on the Road (Travelers' Tales Guides)",
+    "category": "cold_start_long_title",
+    "is_collaborative": false,
+    "isbn": "188521118X",
+    "author": "Judith Babcock Wylie"
+  },
+  {
+    "title": "Bizarre Fantasy Rugby XV's (Bizarre Fantasy Teams)",
+    "category": "cold_start_long_title",
+    "is_collaborative": false,
+    "isbn": "1903009294",
+    "author": "Nick Brownlee"
+  },
+  {
+    "title": "The Talking Cure: A Memoir of Life on Air",
+    "category": "cold_start_long_title",
+    "is_collaborative": false,
+    "isbn": "1583220410",
+    "author": "Mike Feder"
+  },
+  {
+    "title": "Thimbleberries Classic Country: Four Seasons of Lifestyle, Decorating, Entertaining &amp; Quilting",
+    "category": "cold_start_long_title",
+    "is_collaborative": false,
+    "isbn": "1890621102",
+    "author": "Lynette Jensen"
+  },
+  {
+    "title": "Eight Days of Luke",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "0064473570",
+    "author": "Diana Wynne Jones"
+  },
+  {
+    "title": "The Cave Dreamers",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "0380835010",
+    "author": "Jeanne Williams"
+  },
+  {
+    "title": "H.P. Lovecraft's Book of Horror",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "1854872311",
+    "author": "Stephen Jones"
+  },
+  {
+    "title": "Drowned Ammet",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "0333226208",
+    "author": "Diana Wynne Jones"
+  },
+  {
+    "title": "Secret Splendor (Silhouette Classics, No 11)",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "0373482477",
+    "author": "Sandra Brown"
+  },
+  {
+    "title": "Never Can Say Good-Bye: A Novel",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "1570089914",
+    "author": "Robert F. Smith"
+  },
+  {
+    "title": "How to Write and Decode Secret Messages (Codemaster)",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "0590373862",
+    "author": "Marvin Miller"
+  },
+  {
+    "title": "This Fish Is Loaded! The Book of Surreal and Bizarre Humour",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "0806512628",
+    "author": "Richard Glyn Jones"
+  },
+  {
+    "title": "Who Cut the Cheese? : A Cutting Edge Way of Surviving Change by Shifting the Blame",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "0743212355",
+    "author": "Mason Brown"
+  },
+  {
+    "title": "The Frugal Gourmet Cooks American",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "0688063470",
+    "author": "Jeff Smith"
+  },
+  {
+    "title": "Garfield Swallows His Pride (Garfield (Numbered Paperback))",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "0345347250",
+    "author": "Jim Davis"
+  },
+  {
+    "title": "Where Does a Mother Go to Resign?",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "0871236060",
+    "author": "Barbara E. Johnson"
+  },
+  {
+    "title": "Letters to the Thirsty",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "1578560470",
+    "author": "Edward P. Miller"
+  },
+  {
+    "title": "Arthur's Family Vacation - With Stickers (Arthur Adventure Series)",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "0316109584",
+    "author": "Marc Brown"
+  },
+  {
+    "title": "Getting into Medical School: The Premedical Student's Guidebook (Barron's Getting Into Medical School)",
+    "category": "cold_start_common_author",
+    "is_collaborative": false,
+    "isbn": "0812042662",
+    "author": "Sanford J. Brown"
+  }
+]
