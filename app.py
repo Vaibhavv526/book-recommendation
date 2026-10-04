@@ -1,13 +1,18 @@
+import os
 import urllib.parse
 import pickle
 import numpy as np
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
+from engine.recommender import get_recommender
 
 popular = pickle.load(open('popular.pkl','rb'))
 pt = pickle.load(open('pt.pkl','rb'))
 books = pickle.load(open('books.pkl','rb'))
 similar_books = pickle.load(open('similar_books.pkl','rb'))
+
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+recommender = get_recommender(PROJECT_DIR)
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
@@ -181,6 +186,32 @@ def api_book_detail(book_id):
         return jsonify({'error': 'book_not_found', 'message': f"Book with ID '{book_id}' was not found in the catalogue."}), 404
     return jsonify(enrich_book_details(book)), 200
 
+STRATEGY_LABELS = {
+    'collaborative': 'Collaborative Reader Patterns',
+    'content': 'Thematic & Author Affinity',
+    'content_freeform': 'Thematic & Author Affinity',
+    'content_with_popularity_backfill': 'Thematic Match + Popularity Fallback',
+    'popularity_fallback': 'Popularity Fallback'
+}
+
+def format_recommendation_response(rec_res, source_book):
+    strategy = rec_res.get('strategy', 'content')
+    fallback_used = 'popularity' in strategy
+    label = STRATEGY_LABELS.get(strategy, 'Thematic & Author Affinity')
+    recs = rec_res.get('recommendations', [])
+
+    return {
+        'source_book': source_book,
+        'model_type': 'collaborative' if strategy == 'collaborative' else 'hybrid',
+        'count': len(recs),
+        'recommendations': recs,
+        'engine': {
+            'strategy': strategy,
+            'strategy_label': label,
+            'fallback_used': fallback_used
+        }
+    }
+
 @app.route('/api/recommend', methods=['POST'])
 def api_recommend():
     data = request.get_json(silent=True) or request.form
@@ -190,71 +221,45 @@ def api_recommend():
     query = (data.get('query') or '').strip()
     book_id = (data.get('id') or '').strip()
     
-    target_book = None
-    canonical_title = None
+    if not query and not book_id:
+        return jsonify({'error': 'invalid_request', 'message': "Request body must contain 'query' or 'id'."}), 400
     
     if book_id:
         target_book = isbn_to_book.get(book_id)
-        if target_book:
-            canonical_title = target_book['title']
+        if not target_book:
+            return jsonify({
+                'error': 'book_not_found',
+                'message': f"Book with ID '{book_id}' was not found in the catalogue."
+            }), 404
+        rec_res = recommender.recommend_by_title(target_book['title'], top_n=4)
+        source_book = rec_res.get('source_book') or enrich_book_details(target_book)
+        return jsonify(format_recommendation_response(rec_res, source_book)), 200
+
     elif query:
-        # Match against collaborative index first
-        if query in collab_titles_set:
-            canonical_title = query
-        elif query.lower() in collab_titles_lower_map:
-            canonical_title = collab_titles_lower_map[query.lower()]
-        elif query in title_to_isbn:
-            canonical_title = query
-        elif query.lower() in title_lower_to_isbn:
-            isbn = title_lower_to_isbn[query.lower()]
-            canonical_title = isbn_to_book[isbn]['title']
+        resolved_book = recommender.resolve_book(query)
+        if not resolved_book:
+            return jsonify({
+                'error': 'book_not_found',
+                'message': 'Sorry, this book is not available in our catalogue. Please check the spelling or try another book.'
+            }), 404
         
-        if canonical_title:
-            isbn = title_to_isbn.get(canonical_title)
-            if isbn and isbn in isbn_to_book:
-                target_book = isbn_to_book[isbn]
-    
-    if not target_book and not canonical_title:
-        return jsonify({
-            'error': 'book_not_found',
-            'message': 'Sorry, this book is not available in our catalogue. Please check the spelling or try another book.'
-        }), 404
-    
-    if canonical_title not in collab_titles_set:
-        return jsonify({
-            'error': 'book_not_in_recommender',
-            'message': 'This book is available in the catalogue but is not currently supported by the collaborative recommendation model.',
-            'book': enrich_book_details(target_book) if target_book else {'title': canonical_title}
-        }), 404
-    
-    recs = get_collaborative_recommendations(canonical_title)
-    return jsonify({
-        'source_book': enrich_book_details(target_book) if target_book else {'title': canonical_title},
-        'model_type': 'collaborative',
-        'count': len(recs),
-        'recommendations': recs
-    }), 200
+        rec_res = recommender.recommend_by_title(resolved_book['title'], top_n=4)
+        source_book = rec_res.get('source_book') or enrich_book_details(resolved_book)
+        return jsonify(format_recommendation_response(rec_res, source_book)), 200
 
 @app.route('/api/books/<book_id>/similar', methods=['GET'])
 def api_similar(book_id):
-    book = isbn_to_book.get(str(book_id).strip())
+    clean_id = str(book_id).strip()
+    book = isbn_to_book.get(clean_id)
     if not book:
-        return jsonify({'error': 'book_not_found', 'message': f"Book with ID '{book_id}' was not found in the catalogue."}), 404
-    
-    if not book['in_collaborative_model']:
         return jsonify({
-            'error': 'book_not_in_recommender',
-            'message': 'This book is not currently supported by the collaborative recommendation model.',
-            'book': enrich_book_details(book)
+            'error': 'book_not_found',
+            'message': f"Book with ID '{book_id}' was not found in the catalogue."
         }), 404
-        
-    recs = get_collaborative_recommendations(book['title'])
-    return jsonify({
-        'source_book': enrich_book_details(book),
-        'model_type': 'collaborative',
-        'count': len(recs),
-        'recommendations': recs
-    }), 200
+
+    rec_res = recommender.recommend_by_title(book['title'], top_n=4)
+    source_book = rec_res.get('source_book') or enrich_book_details(book)
+    return jsonify(format_recommendation_response(rec_res, source_book)), 200
 
 # ---------------------------------------------------------
 # Legacy HTML Routes (Preserved for compatibility)
