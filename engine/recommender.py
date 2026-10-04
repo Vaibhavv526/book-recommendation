@@ -3,6 +3,7 @@ import re
 import math
 import pickle
 import urllib.parse
+import difflib
 from collections import defaultdict
 from typing import List, Dict, Any, Optional, Set, Tuple
 import numpy as np
@@ -85,6 +86,31 @@ class TextNormalizer:
                 s = s.split(delim)[0]
         return cls.normalize_title(s)
 
+    _author_cache: Dict[Tuple[str, str], bool] = {}
+
+    @classmethod
+    def is_same_author(cls, author_a: str, author_b: str) -> bool:
+        """Determines if two author strings refer to the same author."""
+        pair = (author_a, author_b)
+        if pair in cls._author_cache:
+            return cls._author_cache[pair]
+        norm_a = cls.normalize_title(author_a)
+        norm_b = cls.normalize_title(author_b)
+        if not norm_a or not norm_b:
+            res = False
+        elif norm_a == norm_b:
+            res = True
+        elif norm_a in norm_b or norm_b in norm_a:
+            res = True
+        else:
+            len_a, len_b = len(norm_a), len(norm_b)
+            if min(len_a, len_b) >= 6 and abs(len_a - len_b) <= 3 and norm_a[0] == norm_b[0]:
+                res = difflib.SequenceMatcher(None, norm_a, norm_b).ratio() >= 0.80
+            else:
+                res = False
+        cls._author_cache[pair] = res
+        return res
+
     @classmethod
     def is_same_book_or_edition(cls, title_a: str, author_a: str, title_b: str, author_b: str) -> bool:
         """
@@ -107,16 +133,18 @@ class TextNormalizer:
         if main_a and main_b and main_a == main_b and len(main_a) >= 4:
             return True
 
-        # 3. Substring / Prefix match for long titles
+        # 3. Substring / Prefix match for multi-word titles
         # e.g. "The Power of Your Subconscious Mind" inside "... Mind: One of the Most Powerful..."
-        if len(norm_a) >= 8 and len(norm_b) >= 8:
+        words_a = norm_a.split()
+        words_b = norm_b.split()
+        if len(norm_a) >= 12 and len(norm_b) >= 12 and len(words_a) >= 2 and len(words_b) >= 2:
             if norm_b.startswith(norm_a) or norm_a.startswith(norm_b):
                 return True
             if f" {norm_a} " in f" {norm_b} " or f" {norm_b} " in f" {norm_a} ":
                 return True
 
         # 4. Fuzzy character sequence similarity >= 0.85 (handles typos like subconscious vs subconsious)
-        if len(norm_a) >= 8 and len(norm_b) >= 8:
+        if len(norm_a) >= 12 and len(norm_b) >= 12 and len(words_a) >= 2 and len(words_b) >= 2:
             ratio = difflib.SequenceMatcher(None, norm_a, norm_b).ratio()
             if ratio >= 0.85:
                 return True
@@ -152,12 +180,7 @@ class TextNormalizer:
             return True
 
         # 8. Author match + subset or substring
-        norm_auth_a = cls.normalize_title(author_a)
-        norm_auth_b = cls.normalize_title(author_b)
-        authors_match = bool(norm_auth_a and norm_auth_b and (
-            norm_auth_a in norm_auth_b or norm_auth_b in norm_auth_a
-            or difflib.SequenceMatcher(None, norm_auth_a, norm_auth_b).ratio() >= 0.80
-        ))
+        authors_match = cls.is_same_author(author_a, author_b)
 
         if authors_match:
             if norm_a in norm_b or norm_b in norm_a:
@@ -356,23 +379,46 @@ class ContentEngine:
         if not title_toks and not author_toks:
             return []
 
-        q_tf: Dict[str, float] = defaultdict(float)
-        for t in title_toks:
-            q_tf[t] += 1.0
-        for a in author_toks:
-            q_tf[a] += self.author_weight
-
-        q_norm_sq = 0.0
+        # Step 1: Collect candidates and scores from title tokens first
+        matched_title_docs: Set[int] = set()
         scores: Dict[int, float] = defaultdict(float)
+        q_norm_sq = 0.0
 
-        for t, tf_val in q_tf.items():
-            if t in self.idf:
-                qw = (1.0 + math.log(tf_val)) * self.idf[t]
-                q_norm_sq += qw * qw
-                postings = self.inverted_index.get(t, [])
-                for doc_id, dw in postings:
-                    if doc_id != source_doc_id:
-                        scores[doc_id] += qw * dw
+        if title_toks:
+            t_tf: Dict[str, float] = defaultdict(float)
+            for t in title_toks:
+                t_tf[t] += 1.0
+
+            for t, tf_val in t_tf.items():
+                if t in self.idf:
+                    qw = (1.0 + math.log(tf_val)) * self.idf[t]
+                    q_norm_sq += qw * qw
+                    for doc_id, dw in self.inverted_index.get(t, []):
+                        if doc_id != source_doc_id:
+                            scores[doc_id] += qw * dw
+                            matched_title_docs.add(doc_id)
+
+        # Step 2: Process author tokens with guard against weak author-token-only bleed
+        # When query_author is provided, candidates without title overlap are only allowed if
+        # they match the rarest author token AND verify as the same author.
+        if author_toks:
+            a_tf: Dict[str, float] = defaultdict(float)
+            for a in author_toks:
+                a_tf[a] += self.author_weight
+
+            rarest_author_token = max(author_toks, key=lambda a: self.idf.get(a, 0.0))
+
+            for a, tf_val in a_tf.items():
+                if a in self.idf:
+                    qw = (1.0 + math.log(tf_val)) * self.idf[a]
+                    q_norm_sq += qw * qw
+                    is_rarest = (a == rarest_author_token)
+                    for doc_id, dw in self.inverted_index.get(a, []):
+                        if doc_id == source_doc_id:
+                            continue
+                        cand_author = self.doc_authors[doc_id]
+                        if TextNormalizer.is_same_author(query_author, cand_author):
+                            scores[doc_id] += qw * dw
 
         if not scores or q_norm_sq <= 0:
             return []
@@ -385,7 +431,20 @@ class ContentEngine:
 
         # Sort descending by cosine similarity
         results.sort(key=lambda x: x[1], reverse=True)
-        return results[:top_k]
+
+        # Author candidate cap in candidate pool: prevent a single prolific author
+        # from monopolizing all candidates before diversity filtering
+        filtered_results = []
+        author_pool_counts: Dict[str, int] = defaultdict(int)
+        for doc_id, sim in results[:top_k * 2]:
+            a_norm = TextNormalizer.normalize_title(self.doc_authors[doc_id])
+            if author_pool_counts[a_norm] < 6:
+                filtered_results.append((doc_id, sim))
+                author_pool_counts[a_norm] += 1
+            if len(filtered_results) >= top_k:
+                break
+
+        return filtered_results
 
 
 class PopularityEngine:
@@ -569,7 +628,8 @@ class HybridRecommender:
         self,
         candidates: List[Dict[str, Any]],
         source_book: Optional[Dict[str, Any]],
-        top_n: int = 4
+        top_n: int = 4,
+        fallback_query: str = ''
     ) -> List[Dict[str, Any]]:
         """
         Applies:
@@ -581,7 +641,7 @@ class HybridRecommender:
         seen_norm_titles: Set[str] = set()
         author_counts: Dict[str, int] = defaultdict(int)
 
-        source_title = source_book.get('title', '') if source_book else ''
+        source_title = source_book.get('title', '') if source_book else fallback_query
         source_author = source_book.get('author', '') if source_book else ''
         source_isbn = source_book.get('isbn', '') if source_book else ''
 
@@ -640,11 +700,26 @@ class HybridRecommender:
             if len(accepted) >= top_n:
                 break
             c_isbn = cand.get('isbn') or cand.get('id', '')
-            norm_c_title = TextNormalizer.normalize_title(cand.get('title', ''))
-            if c_isbn not in seen_isbns and norm_c_title not in seen_norm_titles:
-                accepted.append(cand)
-                seen_isbns.add(c_isbn)
-                seen_norm_titles.add(norm_c_title)
+            c_title = cand.get('title', '')
+            c_author = cand.get('author', '')
+            norm_c_title = TextNormalizer.normalize_title(c_title)
+            if c_isbn in seen_isbns or norm_c_title in seen_norm_titles:
+                continue
+
+            # Ensure edition deduplication also holds for deferred candidates
+            if source_title and TextNormalizer.is_same_book_or_edition(
+                source_title, source_author, c_title, c_author
+            ):
+                continue
+            if any(
+                TextNormalizer.is_same_book_or_edition(acc['title'], acc['author'], c_title, c_author)
+                for acc in accepted
+            ):
+                continue
+
+            accepted.append(cand)
+            seen_isbns.add(c_isbn)
+            seen_norm_titles.add(norm_c_title)
 
         return accepted[:top_n]
 
@@ -740,15 +815,25 @@ class HybridRecommender:
         # ---------------------------------------------------------
         # Apply Edition Deduplication & Author Diversity Filter
         # ---------------------------------------------------------
-        final_recs = self._filter_and_diversify(candidates, source_book, top_n=top_n)
+        final_recs = self._filter_and_diversify(candidates, source_book, top_n=top_n, fallback_query=clean_query)
 
         # ---------------------------------------------------------
         # Strategy 3: Popularity Fallback Backfill
         # ---------------------------------------------------------
         if len(final_recs) < top_n:
-            pop_books = self.pop_engine.get_top_popular(limit=top_n * 3)
+            pop_books = self.pop_engine.get_top_popular(limit=top_n * 5)
+            rec_author_counts: Dict[str, int] = defaultdict(int)
+            for r in final_recs:
+                rec_author_counts[TextNormalizer.normalize_title(r.get('author', ''))] += 1
+
             for pop_item in pop_books:
                 pop_title = pop_item['title']
+                pop_author = pop_item['author']
+                norm_pop_author = TextNormalizer.normalize_title(pop_author)
+
+                if rec_author_counts[norm_pop_author] >= 2:
+                    continue
+
                 pop_isbn = self.title_to_isbn.get(pop_title, '')
                 if pop_isbn and pop_isbn in self.isbn_to_book:
                     full_pop = self.enrich_book(self.isbn_to_book[pop_isbn])
@@ -756,15 +841,23 @@ class HybridRecommender:
                     full_pop = self.enrich_book(pop_item)
 
                 # Validate deduplication against source and existing recommendations
-                if source_book and TextNormalizer.is_same_book_or_edition(
-                    source_book['title'], source_book['author'], full_pop['title'], full_pop['author']
+                query_title_for_check = source_book['title'] if source_book else clean_query
+                query_author_for_check = source_book['author'] if source_book else ''
+                if TextNormalizer.is_same_book_or_edition(
+                    query_title_for_check, query_author_for_check, full_pop['title'], full_pop['author']
                 ):
                     continue
 
-                if any(r.get('id') == full_pop.get('id') or r.get('title') == full_pop.get('title') for r in final_recs):
+                if any(
+                    r.get('id') == full_pop.get('id')
+                    or r.get('title') == full_pop.get('title')
+                    or TextNormalizer.is_same_book_or_edition(r.get('title', ''), r.get('author', ''), full_pop['title'], full_pop['author'])
+                    for r in final_recs
+                ):
                     continue
 
                 final_recs.append(full_pop)
+                rec_author_counts[norm_pop_author] += 1
                 if len(final_recs) >= top_n:
                     break
 
