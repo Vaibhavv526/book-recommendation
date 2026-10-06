@@ -1,0 +1,44 @@
+# Git & CI/CD
+.git
+.github
+
+# Virtual Environments
+.venv
+venv
+
+# Python Bytecode & Caches
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.mypy_cache
+.ruff_cache
+
+# Node & Frontend
+node_modules
+frontend/node_modules
+frontend/dist
+frontend/.vite
+frontend
+
+# Environment Files
+.env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.*
+
+# Development & Evaluation Artifacts
+evaluation
+*.ipynb
+.ipynb_checkpoints
+*.csv
+ds.exe
+.idea
+.vscode
+
+# Logs & System Files
+*.log
+.DS_Store
+Thumbs.db
