@@ -6,13 +6,24 @@ from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from engine.recommender import get_recommender
 
-popular = pickle.load(open('popular.pkl','rb'))
-pt = pickle.load(open('pt.pkl','rb'))
-books = pickle.load(open('books.pkl','rb'))
-similar_books = pickle.load(open('similar_books.pkl','rb'))
-
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 recommender = get_recommender(PROJECT_DIR)
+
+# Reused catalogue & collaborative structures from hybrid recommender (zero duplicate loading)
+popular = recommender.pop_engine.popular_df
+pt = recommender.collab_engine.pt
+similar_books = recommender.collab_engine.similar_books
+collab_titles_set = recommender.collab_engine.collab_titles_set
+collab_titles_lower_map = recommender.collab_engine.collab_titles_lower_map
+
+isbn_to_book = recommender.isbn_to_book
+title_to_isbn = recommender.title_to_isbn
+title_lower_to_isbn = recommender.title_lower_to_isbn
+
+# Server-Side Search Index (lightweight parallel arrays over canonical titles)
+search_titles = list(title_to_isbn.keys())
+search_titles_lower = [t.lower() for t in search_titles]
+search_isbns = list(title_to_isbn.values())
 
 app = Flask(__name__)
 cors_origins_env = os.environ.get('CORS_ORIGINS', '*').strip()
@@ -32,55 +43,6 @@ CORS(
     supports_credentials=False
 )
 
-# ---------------------------------------------------------
-# Server-Side Search Index & Metadata Lookup Structures
-# ---------------------------------------------------------
-collab_titles_set = set(pt.index)
-collab_titles_lower_map = {title.lower(): title for title in pt.index}
-
-# 1. Full ISBN lookup table for all 271,360 books in books.pkl
-isbn_to_book = {}
-for row in books.itertuples(index=False):
-    isbn = str(row[0]).strip()
-    title = str(row[1]).strip()
-    author = str(row[2]).strip() if str(row[2]).strip() not in ('nan', '') else 'Unknown'
-    year = str(row[3]).strip() if str(row[3]).strip() not in ('nan', '') else ''
-    publisher = str(row[4]).strip() if str(row[4]).strip() not in ('nan', '') else 'Unknown'
-    img_m = str(row[6]).strip() if str(row[6]).strip() not in ('nan', '') else ''
-    img_l = str(row[7]).strip() if str(row[7]).strip() not in ('nan', '') else ''
-    
-    in_collab = title in collab_titles_set
-    
-    isbn_to_book[isbn] = {
-        'id': isbn,
-        'isbn': isbn,
-        'title': title,
-        'author': author,
-        'year': year,
-        'publisher': publisher,
-        'image_url': img_m,
-        'image_url_m': img_m,
-        'image_url_l': img_l,
-        'in_collaborative_model': in_collab
-    }
-
-# 2. Deduplicated search index & title-to-isbn mapping (one canonical entry per title)
-books_unique = books.drop_duplicates('Book-Title')
-title_to_isbn = {}
-title_lower_to_isbn = {}
-search_items = []
-search_titles_lower = []
-
-for row in books_unique.itertuples(index=False):
-    isbn = str(row[0]).strip()
-    title = str(row[1]).strip()
-    b_dict = isbn_to_book[isbn]
-    
-    title_to_isbn[title] = isbn
-    title_lower_to_isbn[title.lower()] = isbn
-    search_items.append(b_dict)
-    search_titles_lower.append(title.lower())
-
 def generate_amazon_url(title, author):
     query = f"{title} {author}".strip()
     return f"https://www.amazon.com/s?k={urllib.parse.quote_plus(query)}"
@@ -90,10 +52,7 @@ def generate_pdf_url(title):
     return f"https://www.google.com/search?q={urllib.parse.quote_plus(query)}"
 
 def enrich_book_details(book_dict):
-    b = dict(book_dict)
-    b['amazon_search_url'] = generate_amazon_url(b.get('title', ''), b.get('author', ''))
-    b['pdf_search_url'] = generate_pdf_url(b.get('title', ''))
-    return b
+    return recommender.enrich_book(book_dict)
 
 def get_collaborative_recommendations(canonical_title):
     if canonical_title not in collab_titles_set:
@@ -108,21 +67,18 @@ def get_collaborative_recommendations(canonical_title):
         if rec_isbn and rec_isbn in isbn_to_book:
             rec_book = enrich_book_details(isbn_to_book[rec_isbn])
         else:
-            temp_df = books[books['Book-Title'] == rec_title]
-            rec_book = {
-                'id': str(temp_df['ISBN'].values[0]) if len(temp_df) > 0 else '',
-                'isbn': str(temp_df['ISBN'].values[0]) if len(temp_df) > 0 else '',
+            rec_book = enrich_book_details({
+                'id': '',
+                'isbn': '',
                 'title': rec_title,
-                'author': str(temp_df['Book-Author'].values[0]) if len(temp_df) > 0 else 'Unknown',
-                'year': str(temp_df['Year-Of-Publication'].values[0]) if len(temp_df) > 0 else '',
-                'publisher': str(temp_df['Publisher'].values[0]) if len(temp_df) > 0 else 'Unknown',
-                'image_url': str(temp_df['Image-URL-M'].values[0]) if len(temp_df) > 0 else '',
-                'image_url_m': str(temp_df['Image-URL-M'].values[0]) if len(temp_df) > 0 else '',
-                'image_url_l': str(temp_df['Image-URL-L'].values[0]) if len(temp_df) > 0 else '',
-                'in_collaborative_model': True,
-                'amazon_search_url': generate_amazon_url(rec_title, ''),
-                'pdf_search_url': generate_pdf_url(rec_title)
-            }
+                'author': 'Unknown',
+                'year': '',
+                'publisher': 'Unknown',
+                'image_url': '',
+                'image_url_m': '',
+                'image_url_l': '',
+                'in_collaborative_model': True
+            })
         recs.append(rec_book)
     return recs
 
@@ -137,19 +93,19 @@ def search_books(query, limit=8):
     
     for i, t in enumerate(search_titles_lower):
         if t == q:
-            exact.append(search_items[i])
+            exact.append(search_isbns[i])
         elif t.startswith(q):
-            prefix.append(search_items[i])
+            prefix.append(search_isbns[i])
         elif q in t:
-            contains.append(search_items[i])
+            contains.append(search_isbns[i])
             
     combined = exact + prefix + contains
     seen = set()
     results = []
-    for item in combined:
-        if item['id'] not in seen:
-            seen.add(item['id'])
-            results.append(enrich_book_details(item))
+    for isbn in combined:
+        if isbn not in seen and isbn in isbn_to_book:
+            seen.add(isbn)
+            results.append(enrich_book_details(isbn_to_book[isbn]))
             if len(results) >= limit:
                 break
     return results
@@ -325,13 +281,12 @@ def recommend():
 
     data = []
     for i in similar_items:
-        item = []
-        temp_df = books[books['Book-Title'] == pt.index[i[0]]]
-        item.extend(list(temp_df.drop_duplicates('Book-Title')['Book-Title'].values))
-        item.extend(list(temp_df.drop_duplicates('Book-Title')['Book-Author'].values))
-        item.extend(list(temp_df.drop_duplicates('Book-Title')['Image-URL-M'].values))
-
-        data.append(item)
+        rec_title = pt.index[i[0]]
+        rec_isbn = title_to_isbn.get(rec_title)
+        book_info = isbn_to_book.get(rec_isbn, {}) if rec_isbn else {}
+        author = book_info.get('author', 'Unknown')
+        image = book_info.get('image_url_m', '')
+        data.append([rec_title, author, image])
 
     return render_template('recommend.html', data=data, user_input=cleaned_input)
 
