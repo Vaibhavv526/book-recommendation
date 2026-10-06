@@ -15,7 +15,22 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 recommender = get_recommender(PROJECT_DIR)
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+cors_origins_env = os.environ.get('CORS_ORIGINS', '*').strip()
+
+if cors_origins_env == '*':
+    cors_origins = '*'
+else:
+    cors_origins = [
+        origin.strip()
+        for origin in cors_origins_env.split(',')
+        if origin.strip()
+    ]
+
+CORS(
+    app,
+    resources={r"/api/*": {"origins": cors_origins}},
+    supports_credentials=False
+)
 
 # ---------------------------------------------------------
 # Server-Side Search Index & Metadata Lookup Structures
@@ -349,4 +364,12 @@ def handle_general_exception(e):
     return render_template('recommend.html', message="An error occurred while processing your request."), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    HOST = os.environ.get('HOST', '127.0.0.1')
+    PORT = int(os.environ.get('PORT', '5000'))
+    DEBUG = os.environ.get('DEBUG', 'false').lower() in ('true', '1', 'yes')
+
+    app.run(
+        host=HOST,
+        port=PORT,
+        debug=DEBUG
+    )
