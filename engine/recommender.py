@@ -2,6 +2,8 @@ import os
 import re
 import math
 import pickle
+import sqlite3
+import threading
 import urllib.parse
 import difflib
 from collections import defaultdict
@@ -194,12 +196,26 @@ class TextNormalizer:
 class CollaborativeEngine:
     """Wrapper around existing collaborative model artifacts (pt.pkl & similar_books.pkl)."""
 
-    def __init__(self, pt_path: str, similar_books_path: str):
+    def __init__(self, pt_path: str, similar_books_path: str, cache_dir: Optional[str] = None):
         if not os.path.exists(pt_path) or not os.path.exists(similar_books_path):
             raise FileNotFoundError(f"Collaborative model files not found: {pt_path}, {similar_books_path}")
-        
-        with open(pt_path, 'rb') as f:
-            self.pt = pickle.load(f)
+
+        collab_index_cache = os.path.join(cache_dir, 'collab_index.pkl') if cache_dir else None
+        if collab_index_cache and os.path.exists(collab_index_cache):
+            with open(collab_index_cache, 'rb') as f:
+                pt_index = pickle.load(f)
+        else:
+            with open(pt_path, 'rb') as f:
+                raw_pt = pickle.load(f)
+            pt_index = raw_pt.index
+            if collab_index_cache:
+                os.makedirs(os.path.dirname(collab_index_cache), exist_ok=True)
+                with open(collab_index_cache, 'wb') as f:
+                    pickle.dump(pt_index, f, protocol=pickle.HIGHEST_PROTOCOL)
+
+        # Store lightweight DataFrame with only the index to avoid loading unused user rating columns
+        self.pt = pd.DataFrame(index=pt_index)
+
         with open(similar_books_path, 'rb') as f:
             self.similar_books = pickle.load(f)
 
@@ -251,19 +267,17 @@ class ContentEngine:
         self.doc_titles: List[str] = []
         self.doc_authors: List[str] = []
         self.doc_isbns: List[str] = []
-        self.doc_years: List[str] = []
-        self.doc_publishers: List[str] = []
-        self.doc_images: List[str] = []
-        self.doc_images_m: List[str] = []
-        self.doc_images_l: List[str] = []
-        
+
         self.title_to_doc_id: Dict[str, int] = {}
         self.isbn_to_doc_id: Dict[str, int] = {}
 
-        # Inverted index: token -> list of (doc_id, tfidf_weight)
-        self.inverted_index: Dict[str, List[Tuple[int, float]]] = defaultdict(list)
         self.doc_norms: np.ndarray = np.array([], dtype=np.float32)
         self.idf: Dict[str, float] = {}
+
+        # Compact CSR inverted index arrays
+        self.all_doc_ids: np.ndarray = np.array([], dtype=np.uint32)
+        self.all_weights: np.ndarray = np.array([], dtype=np.float64)
+        self.token_offsets: Dict[str, Tuple[int, int]] = {}
 
         cache_file = os.path.join(cache_dir, 'content_index.pkl') if cache_dir else None
         if cache_file and os.path.exists(cache_file):
@@ -272,16 +286,29 @@ class ContentEngine:
             self.doc_isbns = state['doc_isbns']
             self.doc_titles = state['doc_titles']
             self.doc_authors = state['doc_authors']
-            self.doc_years = state['doc_years']
-            self.doc_publishers = state['doc_publishers']
-            self.doc_images = state['doc_images']
-            self.doc_images_m = state['doc_images_m']
-            self.doc_images_l = state['doc_images_l']
             self.doc_norms = state['doc_norms']
-            self.inverted_index = state['inverted_index']
             self.idf = state['idf']
             self.title_to_doc_id = state['title_to_doc_id']
-            self.isbn_to_doc_id = state['isbn_to_doc_id']
+            self.isbn_to_doc_id = state.get('isbn_to_doc_id', {})
+
+            if 'all_doc_ids' in state:
+                self.all_doc_ids = state['all_doc_ids']
+                self.all_weights = state['all_weights']
+                self.token_offsets = state['token_offsets']
+            else:
+                raw_inv = state['inverted_index']
+                total_postings = sum(len(v) for v in raw_inv.values())
+                self.all_doc_ids = np.zeros(total_postings, dtype=np.uint32)
+                self.all_weights = np.zeros(total_postings, dtype=np.float64)
+                cur = 0
+                for t, postings in raw_inv.items():
+                    cnt = len(postings)
+                    self.token_offsets[t] = (cur, cnt)
+                    if cnt > 0:
+                        docs, weights = zip(*postings)
+                        self.all_doc_ids[cur:cur + cnt] = docs
+                        self.all_weights[cur:cur + cnt] = weights
+                    cur += cnt
         else:
             self._build_index(books_unique)
             if cache_file:
@@ -290,40 +317,37 @@ class ContentEngine:
                     'doc_isbns': self.doc_isbns,
                     'doc_titles': self.doc_titles,
                     'doc_authors': self.doc_authors,
-                    'doc_years': self.doc_years,
-                    'doc_publishers': self.doc_publishers,
-                    'doc_images': self.doc_images,
-                    'doc_images_m': self.doc_images_m,
-                    'doc_images_l': self.doc_images_l,
                     'doc_norms': self.doc_norms,
-                    'inverted_index': self.inverted_index,
                     'idf': self.idf,
                     'title_to_doc_id': self.title_to_doc_id,
                     'isbn_to_doc_id': self.isbn_to_doc_id,
+                    'all_doc_ids': self.all_doc_ids,
+                    'all_weights': self.all_weights,
+                    'token_offsets': self.token_offsets,
                 }
                 with open(cache_file, 'wb') as f:
                     pickle.dump(state, f, protocol=pickle.HIGHEST_PROTOCOL)
 
+    @property
+    def inverted_index(self):
+        """Lazy compatibility property if external callers reference inverted_index directly."""
+        return {
+            t: [
+                (int(self.all_doc_ids[off + i]), float(self.all_weights[off + i]))
+                for i in range(cnt)
+            ]
+            for t, (off, cnt) in self.token_offsets.items()
+        }
+
     def _build_index(self, books_unique: pd.DataFrame):
-        # Extract column lists directly for maximum speed and minimal memory
         isbns = books_unique['ISBN'].astype(str).tolist()
         titles = books_unique['Book-Title'].fillna('').astype(str).tolist()
         authors = books_unique['Book-Author'].fillna('Unknown').astype(str).tolist()
-        years = books_unique['Year-Of-Publication'].fillna('').astype(str).tolist()
-        publishers = books_unique['Publisher'].fillna('Unknown').astype(str).tolist()
-        imgs_s = books_unique['Image-URL-S'].fillna('').astype(str).tolist() if 'Image-URL-S' in books_unique.columns else [''] * len(isbns)
-        imgs_m = books_unique['Image-URL-M'].fillna('').astype(str).tolist() if 'Image-URL-M' in books_unique.columns else [''] * len(isbns)
-        imgs_l = books_unique['Image-URL-L'].fillna('').astype(str).tolist() if 'Image-URL-L' in books_unique.columns else [''] * len(isbns)
 
         n_docs = len(titles)
         self.doc_isbns = isbns
         self.doc_titles = titles
         self.doc_authors = authors
-        self.doc_years = years
-        self.doc_publishers = publishers
-        self.doc_images = [m or s for m, s in zip(imgs_m, imgs_s)]
-        self.doc_images_m = imgs_m
-        self.doc_images_l = imgs_l
 
         self.doc_norms = np.zeros(n_docs, dtype=np.float32)
         df_freq = defaultdict(int)
@@ -343,7 +367,6 @@ class ContentEngine:
             t_toks = TextNormalizer.tokenize(title, filter_stopwords=True)
             a_toks = TextNormalizer.tokenize(authors[doc_id], filter_stopwords=True)
 
-            # Combined tokens with author repeated for weighting
             combined_toks = t_toks + a_toks + a_toks
             doc_tokens_list.append(combined_toks)
             for t in set(combined_toks):
@@ -356,6 +379,7 @@ class ContentEngine:
         }
 
         # Pass 2: Inverted index & Euclidean document norms
+        inv = defaultdict(list)
         for doc_id, toks in enumerate(doc_tokens_list):
             if not toks:
                 self.doc_norms[doc_id] = 1.0
@@ -367,9 +391,23 @@ class ContentEngine:
             norm_sq = 0.0
             for t, count in tf_counts.items():
                 w = (1.0 + math.log(count)) * self.idf[t]
-                self.inverted_index[t].append((doc_id, float(w)))
+                inv[t].append((doc_id, float(w)))
                 norm_sq += w * w
             self.doc_norms[doc_id] = math.sqrt(norm_sq) if norm_sq > 0 else 1.0
+
+        total_postings = sum(len(v) for v in inv.values())
+        self.all_doc_ids = np.zeros(total_postings, dtype=np.uint32)
+        self.all_weights = np.zeros(total_postings, dtype=np.float64)
+        self.token_offsets = {}
+        cur = 0
+        for t, postings in inv.items():
+            cnt = len(postings)
+            self.token_offsets[t] = (cur, cnt)
+            if cnt > 0:
+                docs, weights = zip(*postings)
+                self.all_doc_ids[cur:cur + cnt] = docs
+                self.all_weights[cur:cur + cnt] = weights
+            cur += cnt
 
     def query(self, query_title: str, query_author: str = '', source_doc_id: int = -1, top_k: int = 30) -> List[Tuple[int, float]]:
         """Queries the inverted index and returns candidate doc_ids with cosine similarity scores."""
@@ -390,13 +428,17 @@ class ContentEngine:
                 t_tf[t] += 1.0
 
             for t, tf_val in t_tf.items():
-                if t in self.idf:
+                if t in self.idf and t in self.token_offsets:
                     qw = (1.0 + math.log(tf_val)) * self.idf[t]
                     q_norm_sq += qw * qw
-                    for doc_id, dw in self.inverted_index.get(t, []):
-                        if doc_id != source_doc_id:
-                            scores[doc_id] += qw * dw
-                            matched_title_docs.add(doc_id)
+                    off, cnt = self.token_offsets[t]
+                    t_docs = self.all_doc_ids[off:off + cnt]
+                    t_w = self.all_weights[off:off + cnt]
+                    for i in range(cnt):
+                        d_id = int(t_docs[i])
+                        if d_id != source_doc_id:
+                            scores[d_id] += qw * t_w[i]
+                            matched_title_docs.add(d_id)
 
         # Step 2: Process author tokens with guard against weak author-token-only bleed
         # When query_author is provided, candidates without title overlap are only allowed if
@@ -409,16 +451,19 @@ class ContentEngine:
             rarest_author_token = max(author_toks, key=lambda a: self.idf.get(a, 0.0))
 
             for a, tf_val in a_tf.items():
-                if a in self.idf:
+                if a in self.idf and a in self.token_offsets:
                     qw = (1.0 + math.log(tf_val)) * self.idf[a]
                     q_norm_sq += qw * qw
-                    is_rarest = (a == rarest_author_token)
-                    for doc_id, dw in self.inverted_index.get(a, []):
-                        if doc_id == source_doc_id:
+                    off, cnt = self.token_offsets[a]
+                    a_docs = self.all_doc_ids[off:off + cnt]
+                    a_w = self.all_weights[off:off + cnt]
+                    for i in range(cnt):
+                        d_id = int(a_docs[i])
+                        if d_id == source_doc_id:
                             continue
-                        cand_author = self.doc_authors[doc_id]
+                        cand_author = self.doc_authors[d_id]
                         if TextNormalizer.is_same_author(query_author, cand_author):
-                            scores[doc_id] += qw * dw
+                            scores[d_id] += qw * a_w[i]
 
         if not scores or q_norm_sq <= 0:
             return []
@@ -471,6 +516,178 @@ class PopularityEngine:
         return self.popular_books[:limit]
 
 
+class SqliteBookCatalogue:
+    """Thread-safe, read-only SQLite wrapper for book metadata lookup by ISBN."""
+
+    def __init__(self, db_path: str):
+        self.db_path = db_path
+        self._local = threading.local()
+        conn = sqlite3.connect(db_path)
+        self._len = conn.execute("SELECT COUNT(*) FROM books").fetchone()[0]
+        conn.close()
+
+    def _get_conn(self) -> sqlite3.Connection:
+        if not hasattr(self._local, 'conn') or self._local.conn is None:
+            conn = sqlite3.connect(self.db_path)
+            conn.execute("PRAGMA query_only = ON;")
+            self._local.conn = conn
+        return self._local.conn
+
+    def __len__(self) -> int:
+        return self._len
+
+    def __contains__(self, isbn: Any) -> bool:
+        if not isbn:
+            return False
+        cur = self._get_conn().cursor()
+        row = cur.execute("SELECT 1 FROM books WHERE isbn = ?", (str(isbn),)).fetchone()
+        return row is not None
+
+    def get(self, isbn: Any, default: Any = None) -> Any:
+        if not isbn:
+            return default
+        cur = self._get_conn().cursor()
+        row = cur.execute(
+            "SELECT isbn, title, author, year, publisher, image_url_m, image_url_l FROM books WHERE isbn = ?",
+            (str(isbn),)
+        ).fetchone()
+        if not row:
+            return default
+        return {
+            'id': row[0],
+            'isbn': row[0],
+            'title': row[1],
+            'author': row[2],
+            'year': row[3],
+            'publisher': row[4],
+            'image_url': row[5],
+            'image_url_m': row[5],
+            'image_url_l': row[6],
+        }
+
+    def __getitem__(self, isbn: Any) -> Dict[str, Any]:
+        res = self.get(isbn)
+        if res is None:
+            raise KeyError(isbn)
+        return res
+
+    def values(self):
+        cur = self._get_conn().cursor()
+        cur.execute("SELECT isbn, title, author, year, publisher, image_url_m, image_url_l FROM books")
+        for row in cur:
+            yield {
+                'id': row[0],
+                'isbn': row[0],
+                'title': row[1],
+                'author': row[2],
+                'year': row[3],
+                'publisher': row[4],
+                'image_url': row[5],
+                'image_url_m': row[5],
+                'image_url_l': row[6],
+            }
+
+
+class SqliteTitleToIsbn:
+    """Thread-safe, read-only SQLite wrapper for Title -> ISBN mapping."""
+
+    def __init__(self, db_path: str):
+        self.db_path = db_path
+        self._local = threading.local()
+        conn = sqlite3.connect(db_path)
+        self._len = conn.execute("SELECT COUNT(*) FROM title_to_isbn").fetchone()[0]
+        conn.close()
+
+    def _get_conn(self) -> sqlite3.Connection:
+        if not hasattr(self._local, 'conn') or self._local.conn is None:
+            conn = sqlite3.connect(self.db_path)
+            conn.execute("PRAGMA query_only = ON;")
+            self._local.conn = conn
+        return self._local.conn
+
+    def __len__(self) -> int:
+        return self._len
+
+    def __contains__(self, title: Any) -> bool:
+        if not title:
+            return False
+        cur = self._get_conn().cursor()
+        row = cur.execute("SELECT 1 FROM title_to_isbn WHERE title = ?", (str(title),)).fetchone()
+        return row is not None
+
+    def get(self, title: Any, default: Any = None) -> Any:
+        if not title:
+            return default
+        cur = self._get_conn().cursor()
+        row = cur.execute("SELECT isbn FROM title_to_isbn WHERE title = ?", (str(title),)).fetchone()
+        return row[0] if row else default
+
+    def __getitem__(self, title: Any) -> str:
+        res = self.get(title)
+        if res is None:
+            raise KeyError(title)
+        return res
+
+    def keys(self):
+        cur = self._get_conn().cursor()
+        cur.execute("SELECT title FROM title_to_isbn")
+        for row in cur:
+            yield row[0]
+
+    def values(self):
+        cur = self._get_conn().cursor()
+        cur.execute("SELECT isbn FROM title_to_isbn")
+        for row in cur:
+            yield row[0]
+
+    def items(self):
+        cur = self._get_conn().cursor()
+        cur.execute("SELECT title, isbn FROM title_to_isbn")
+        for row in cur:
+            yield (row[0], row[1])
+
+
+class SqliteTitleLowerToIsbn:
+    """Thread-safe, read-only SQLite wrapper for lowercased Title -> ISBN mapping."""
+
+    def __init__(self, db_path: str):
+        self.db_path = db_path
+        self._local = threading.local()
+        conn = sqlite3.connect(db_path)
+        self._len = conn.execute("SELECT COUNT(*) FROM title_lower_to_isbn").fetchone()[0]
+        conn.close()
+
+    def _get_conn(self) -> sqlite3.Connection:
+        if not hasattr(self._local, 'conn') or self._local.conn is None:
+            conn = sqlite3.connect(self.db_path)
+            conn.execute("PRAGMA query_only = ON;")
+            self._local.conn = conn
+        return self._local.conn
+
+    def __len__(self) -> int:
+        return self._len
+
+    def __contains__(self, title_lower: Any) -> bool:
+        if not title_lower:
+            return False
+        cur = self._get_conn().cursor()
+        row = cur.execute("SELECT 1 FROM title_lower_to_isbn WHERE title_lower = ?", (str(title_lower),)).fetchone()
+        return row is not None
+
+    def get(self, title_lower: Any, default: Any = None) -> Any:
+        if not title_lower:
+            return default
+        cur = self._get_conn().cursor()
+        row = cur.execute("SELECT isbn FROM title_lower_to_isbn WHERE title_lower = ?", (str(title_lower),)).fetchone()
+        return row[0] if row else default
+
+    def __getitem__(self, title_lower: Any) -> str:
+        res = self.get(title_lower)
+        if res is None:
+            raise KeyError(title_lower)
+        return res
+
+
 class HybridRecommender:
     """
     Unified Hybrid Recommendation Engine.
@@ -487,64 +704,17 @@ class HybridRecommender:
 
         cache_dir = os.path.join(project_dir, 'engine', 'cache')
         cat_file = os.path.join(cache_dir, 'catalogue_meta.pkl')
+        db_file = os.path.join(cache_dir, 'catalogue.db')
         books_unique = None
 
-        self.isbn_to_book: Dict[str, Dict[str, Any]] = {}
-        self.title_to_isbn: Dict[str, str] = {}
-        self.title_lower_to_isbn: Dict[str, str] = {}
+        if not os.path.exists(db_file):
+            self._build_catalogue_db(db_file, cat_file, project_dir)
 
-        if os.path.exists(cat_file):
-            with open(cat_file, 'rb') as f:
-                cat_meta = pickle.load(f)
-            self.isbn_to_book = cat_meta['isbn_to_book']
-            self.title_to_isbn = cat_meta['title_to_isbn']
-            self.title_lower_to_isbn = cat_meta['title_lower_to_isbn']
-        else:
-            # Load raw metadata books.pkl
-            books_path = os.path.join(project_dir, 'books.pkl')
-            if not os.path.exists(books_path):
-                books_path = os.path.join(project_dir, 'Books.csv')
-                books_df = pd.read_csv(books_path, low_memory=False)
-            else:
-                with open(books_path, 'rb') as f:
-                    books_df = pickle.load(f)
-
-            books_unique = books_df.drop_duplicates('Book-Title').copy()
-
-            for row in books_df.itertuples(index=False):
-                isbn = TextNormalizer.clean_str(row[0])
-                title = TextNormalizer.clean_str(row[1])
-                author = TextNormalizer.clean_str(row[2]) or 'Unknown'
-                year = TextNormalizer.clean_str(row[3])
-                pub = TextNormalizer.clean_str(row[4]) or 'Unknown'
-                img_m = TextNormalizer.clean_str(row[6])
-                img_l = TextNormalizer.clean_str(row[7])
-
-                b_dict = {
-                    'id': isbn,
-                    'isbn': isbn,
-                    'title': title,
-                    'author': author,
-                    'year': year,
-                    'publisher': pub,
-                    'image_url': img_m,
-                    'image_url_m': img_m,
-                    'image_url_l': img_l,
-                }
-                if isbn not in self.isbn_to_book:
-                    self.isbn_to_book[isbn] = b_dict
-                if title not in self.title_to_isbn:
-                    self.title_to_isbn[title] = isbn
-                if title.lower() not in self.title_lower_to_isbn:
-                    self.title_lower_to_isbn[title.lower()] = isbn
-
-            os.makedirs(cache_dir, exist_ok=True)
-            with open(cat_file, 'wb') as f:
-                pickle.dump({
-                    'isbn_to_book': self.isbn_to_book,
-                    'title_to_isbn': self.title_to_isbn,
-                    'title_lower_to_isbn': self.title_lower_to_isbn
-                }, f, protocol=pickle.HIGHEST_PROTOCOL)
+        self.isbn_to_book = SqliteBookCatalogue(db_file)
+        self.title_to_isbn = SqliteTitleToIsbn(db_file)
+        self.title_lower_to_isbn = SqliteTitleLowerToIsbn(db_file)
+        self._db_path = db_file
+        self._local_conn = threading.local()
 
         content_cache_file = os.path.join(cache_dir, 'content_index.pkl')
         if not os.path.exists(content_cache_file) and books_unique is None:
@@ -562,9 +732,111 @@ class HybridRecommender:
         sim_path = os.path.join(project_dir, 'similar_books.pkl')
         pop_path = os.path.join(project_dir, 'popular.pkl')
 
-        self.collab_engine = CollaborativeEngine(pt_path, sim_path)
+        self.collab_engine = CollaborativeEngine(pt_path, sim_path, cache_dir=cache_dir)
         self.content_engine = ContentEngine(books_unique, author_weight=2.5, cache_dir=cache_dir)
         self.pop_engine = PopularityEngine(pop_path)
+
+    @staticmethod
+    def _build_catalogue_db(db_path: str, cat_file: str, project_dir: str):
+        os.makedirs(os.path.dirname(db_path), exist_ok=True)
+        conn = sqlite3.connect(db_path)
+        cur = conn.cursor()
+        cur.execute('PRAGMA synchronous = OFF;')
+        cur.execute('PRAGMA journal_mode = MEMORY;')
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS books (
+                isbn TEXT PRIMARY KEY,
+                title TEXT NOT NULL,
+                author TEXT NOT NULL,
+                year TEXT NOT NULL,
+                publisher TEXT NOT NULL,
+                image_url_m TEXT,
+                image_url_l TEXT
+            );
+        ''')
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS title_to_isbn (
+                title TEXT PRIMARY KEY,
+                isbn TEXT NOT NULL
+            );
+        ''')
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS title_lower_to_isbn (
+                title_lower TEXT PRIMARY KEY,
+                isbn TEXT NOT NULL
+            );
+        ''')
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS search_index (
+                doc_id INTEGER PRIMARY KEY,
+                title_lower TEXT NOT NULL,
+                isbn TEXT NOT NULL
+            );
+        ''')
+
+        if os.path.exists(cat_file):
+            with open(cat_file, 'rb') as f:
+                cat_meta = pickle.load(f)
+            isbn_to_book = cat_meta['isbn_to_book']
+            title_to_isbn = cat_meta['title_to_isbn']
+            title_lower_to_isbn = cat_meta['title_lower_to_isbn']
+        else:
+            books_path = os.path.join(project_dir, 'books.pkl')
+            if not os.path.exists(books_path):
+                books_path = os.path.join(project_dir, 'Books.csv')
+                books_df = pd.read_csv(books_path, low_memory=False)
+            else:
+                with open(books_path, 'rb') as f:
+                    books_df = pickle.load(f)
+
+            isbn_to_book = {}
+            title_to_isbn = {}
+            title_lower_to_isbn = {}
+            for row in books_df.itertuples(index=False):
+                isbn = TextNormalizer.clean_str(row[0])
+                title = TextNormalizer.clean_str(row[1])
+                author = TextNormalizer.clean_str(row[2]) or 'Unknown'
+                year = TextNormalizer.clean_str(row[3])
+                pub = TextNormalizer.clean_str(row[4]) or 'Unknown'
+                img_m = TextNormalizer.clean_str(row[6])
+                img_l = TextNormalizer.clean_str(row[7])
+
+                b_dict = {
+                    'isbn': isbn,
+                    'title': title,
+                    'author': author,
+                    'year': year,
+                    'publisher': pub,
+                    'image_url_m': img_m,
+                    'image_url_l': img_l,
+                }
+                if isbn not in isbn_to_book:
+                    isbn_to_book[isbn] = b_dict
+                if title not in title_to_isbn:
+                    title_to_isbn[title] = isbn
+                if title.lower() not in title_lower_to_isbn:
+                    title_lower_to_isbn[title.lower()] = isbn
+
+        books_data = [
+            (
+                b['isbn'],
+                b['title'],
+                b['author'],
+                b['year'],
+                b['publisher'],
+                b.get('image_url_m', ''),
+                b.get('image_url_l', '')
+            )
+            for b in isbn_to_book.values()
+        ]
+        cur.executemany('INSERT OR IGNORE INTO books VALUES (?, ?, ?, ?, ?, ?, ?)', books_data)
+        cur.executemany('INSERT OR IGNORE INTO title_to_isbn VALUES (?, ?)', list(title_to_isbn.items()))
+        cur.executemany('INSERT OR IGNORE INTO title_lower_to_isbn VALUES (?, ?)', list(title_lower_to_isbn.items()))
+        s_data = [(i + 1, t.lower(), isbn) for i, (t, isbn) in enumerate(title_to_isbn.items())]
+        cur.executemany('INSERT OR IGNORE INTO search_index VALUES (?, ?, ?)', s_data)
+        cur.execute('CREATE INDEX IF NOT EXISTS idx_search_title_lower ON search_index(title_lower);')
+        conn.commit()
+        conn.close()
 
     # -------------------------------------------------------------
     # Metadata Enrichment & Lookup
@@ -619,6 +891,44 @@ class HybridRecommender:
                 return self.enrich_book(self.isbn_to_book[isbn])
 
         return None
+
+    def _get_db_conn(self) -> sqlite3.Connection:
+        if not hasattr(self._local_conn, 'conn') or self._local_conn.conn is None:
+            conn = sqlite3.connect(self._db_path)
+            conn.execute("PRAGMA query_only = ON;")
+            self._local_conn.conn = conn
+        return self._local_conn.conn
+
+    def search_books(self, query: str, limit: int = 8) -> List[Dict[str, Any]]:
+        """Parameterized search preserving exact match, prefix match, and substring ordering."""
+        q = query.strip().lower()
+        if not q:
+            return []
+
+        cur = self._get_db_conn().cursor()
+
+        # 1. Exact matches
+        cur.execute("SELECT isbn FROM search_index WHERE title_lower = ? ORDER BY doc_id", (q,))
+        exact = [r[0] for r in cur.fetchall()]
+
+        # 2. Prefix matches
+        cur.execute("SELECT isbn FROM search_index WHERE title_lower LIKE ? || '%' AND title_lower != ? ORDER BY doc_id", (q, q))
+        prefix = [r[0] for r in cur.fetchall()]
+
+        # 3. Substring contains matches
+        cur.execute("SELECT isbn FROM search_index WHERE title_lower LIKE '%' || ? || '%' AND title_lower NOT LIKE ? || '%' ORDER BY doc_id", (q, q))
+        contains = [r[0] for r in cur.fetchall()]
+
+        combined = exact + prefix + contains
+        seen = set()
+        results = []
+        for isbn in combined:
+            if isbn not in seen and isbn in self.isbn_to_book:
+                seen.add(isbn)
+                results.append(self.enrich_book(self.isbn_to_book[isbn]))
+                if len(results) >= limit:
+                    break
+        return results
 
     # -------------------------------------------------------------
     # Candidate Generation & Diversity Filtering

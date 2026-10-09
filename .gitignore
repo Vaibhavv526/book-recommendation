@@ -8,3 +8,6 @@ __pycache__/
 Books.csv
 Ratings.csv
 Users.csv
+engine/cache/catalogue.db
+engine/cache/collab_index.pkl
+*.bak

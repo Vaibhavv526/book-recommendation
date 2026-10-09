@@ -20,11 +20,6 @@ isbn_to_book = recommender.isbn_to_book
 title_to_isbn = recommender.title_to_isbn
 title_lower_to_isbn = recommender.title_lower_to_isbn
 
-# Server-Side Search Index (lightweight parallel arrays over canonical titles)
-search_titles = list(title_to_isbn.keys())
-search_titles_lower = [t.lower() for t in search_titles]
-search_isbns = list(title_to_isbn.values())
-
 app = Flask(__name__)
 cors_origins_env = os.environ.get('CORS_ORIGINS', '*').strip()
 
@@ -83,32 +78,7 @@ def get_collaborative_recommendations(canonical_title):
     return recs
 
 def search_books(query, limit=8):
-    q = query.strip().lower()
-    if not q:
-        return []
-    
-    exact = []
-    prefix = []
-    contains = []
-    
-    for i, t in enumerate(search_titles_lower):
-        if t == q:
-            exact.append(search_isbns[i])
-        elif t.startswith(q):
-            prefix.append(search_isbns[i])
-        elif q in t:
-            contains.append(search_isbns[i])
-            
-    combined = exact + prefix + contains
-    seen = set()
-    results = []
-    for isbn in combined:
-        if isbn not in seen and isbn in isbn_to_book:
-            seen.add(isbn)
-            results.append(enrich_book_details(isbn_to_book[isbn]))
-            if len(results) >= limit:
-                break
-    return results
+    return recommender.search_books(query, limit=limit)
 
 # ---------------------------------------------------------
 # Modern REST API Endpoints
